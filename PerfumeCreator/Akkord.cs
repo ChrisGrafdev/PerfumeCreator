@@ -17,7 +17,7 @@ namespace PerfumeCreator
         }
     }
 
-    public class Akkord : Fragrance
+    public class Akkord : Molecule
     {
         private float _fullAmount = 0;
 
@@ -31,7 +31,7 @@ namespace PerfumeCreator
         public void AddMolecule(Molecule molecule, MaterialUnit moleculeAmount)
         {
             _moleculeList.Add(new MoleculeAmount(molecule, moleculeAmount));
-            CalcDilution(molecule._dilution, moleculeAmount);
+            //CalcDilution(molecule._dilution, moleculeAmount);
         }
 
         
