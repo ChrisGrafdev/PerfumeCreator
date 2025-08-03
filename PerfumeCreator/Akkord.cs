@@ -17,10 +17,10 @@ namespace PerfumeCreator
         }
     }
 
-    public class Akkord : Molecule
+    public class Akkord : Fragrance
     {
-        private float _fullAmount = 0;
-
+        //private float _fullAmount = 0;
+        /*
         private List<MoleculeAmount> _moleculeList;
         
         public Akkord()
@@ -34,6 +34,6 @@ namespace PerfumeCreator
             //CalcDilution(molecule._dilution, moleculeAmount);
         }
 
-        
+        */
     }
 }
