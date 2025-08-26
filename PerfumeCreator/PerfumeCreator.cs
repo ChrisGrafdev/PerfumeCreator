@@ -238,11 +238,38 @@ namespace PerfumeCreator
             }
         }
 
+        private void treeViewAccord_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var item = e.Item;
+            if (item == null) return;
+
+            TreeNode node = (TreeNode)item;
+            if (node.Tag is Accord && node.Parent == null) // get root-layer Accord
+            {
+                DoDragDrop(node, DragDropEffects.Link);
+                toolStripStatusLabelMain.Text = "Drag item: " + node.ToString();
+            }
+            else
+            {
+                toolStripStatusLabelMain.Text = "Item not dragable!";
+            }
+        }
+
         private void treeViewAccord_DragEnter(object sender, DragEventArgs e)
         {
+            //debug
+            toolStripStatusLabelMain.Text += " --- DragEnter triggert";
+            //
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
-                e.Effect = DragDropEffects.Copy;
+                TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                if (draggedNode?.Tag is Accord)
+                {
+                    toolStripStatusLabelMain.Text += " : Drag&Drop-Link triggert";
+                    e.Effect = DragDropEffects.Link;
+                }
+                else
+                    e.Effect = DragDropEffects.Copy;
             }
             else
             {
@@ -355,6 +382,5 @@ namespace PerfumeCreator
             dropsToolStripMenuItem.Checked = false;
         }
 
-        
     }
 }

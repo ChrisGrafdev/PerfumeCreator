@@ -250,6 +250,7 @@
             treeViewAccord.Name = "treeViewAccord";
             treeViewAccord.Size = new Size(264, 599);
             treeViewAccord.TabIndex = 4;
+            treeViewAccord.ItemDrag += treeViewAccord_ItemDrag;
             treeViewAccord.NodeMouseDoubleClick += treeViewAccord_NodeMouseDoubleClick;
             treeViewAccord.DragDrop += treeViewAccord_DragDrop;
             treeViewAccord.DragEnter += treeViewAccord_DragEnter;
