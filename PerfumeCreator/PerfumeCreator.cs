@@ -170,7 +170,7 @@ namespace PerfumeCreator
             return categoryNode;
         }
 
-        private TreeNode AccordAsTreeNode(Accord accord)
+        /*private TreeNode AccordAsTreeNode(Accord accord)
         {
             List<(IAccordCompatible Frag, MaterialUnit Amount)> ingredients = accord.getIngredients();
             List<TreeNode> ingredientTreeNodes = new List<TreeNode>();
@@ -181,8 +181,8 @@ namespace PerfumeCreator
             TreeNode newAccordNode = new TreeNode(accord._name, ingredientTreeNodes.ToArray());
             newAccordNode.Tag = accord;
             return newAccordNode;
-        }
-        private TreeNode AddComponentToAccord(IAccordCompatible accordComponent, MaterialUnit amount)
+        }*/
+        /*private TreeNode AddComponentToAccord(IAccordCompatible accordComponent, MaterialUnit amount)
         {
             if (accordComponent == null || amount == null)
             {
@@ -215,7 +215,7 @@ namespace PerfumeCreator
             // Error -> should not accure due to previous checks
             toolStripStatusLabelMain.Text = "Error while converting Molecules/Accords to Nodes";
             return null;
-        }
+        }*/
 
         //#########################
         // Drap&Drop functionality
@@ -257,15 +257,11 @@ namespace PerfumeCreator
 
         private void treeViewAccord_DragEnter(object sender, DragEventArgs e)
         {
-            //debug
-            toolStripStatusLabelMain.Text += " --- DragEnter triggert";
-            //
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
                 TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
                 if (draggedNode?.Tag is Accord)
                 {
-                    toolStripStatusLabelMain.Text += " : Drag&Drop-Link triggert";
                     e.Effect = DragDropEffects.Link;
                 }
                 else
@@ -283,7 +279,7 @@ namespace PerfumeCreator
             if (!e.Data.GetDataPresent(typeof(TreeNode)))
                 return;
 
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            /*TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
             if (draggedNode?.Tag is IAccordCompatible accordCompatible)
             {
                 // Get target location
@@ -351,14 +347,13 @@ namespace PerfumeCreator
                         }
                     };
                     addMaterialAmountWindow.ShowDialog();
-                    //addMaterialAmountWindow.Show();
                 }
             }
             else
             {
                 toolStripStatusLabelMain.Text = "Object is not IAccordCompatible! - aborting";
                 return;
-            }
+            }*/
         }
 
 

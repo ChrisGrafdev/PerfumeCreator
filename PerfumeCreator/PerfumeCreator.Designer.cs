@@ -62,6 +62,7 @@
             labelDilutionCalcDiluentResult = new Label();
             comboBoxDilutionCalcMode = new ComboBox();
             splitContainer1 = new SplitContainer();
+            treeViewPerfume = new TreeView();
             mainMenuStrip.SuspendLayout();
             mainStatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerL0).BeginInit();
@@ -193,6 +194,7 @@
             tableLayoutMain.Controls.Add(butAddPerfume, 0, 0);
             tableLayoutMain.Controls.Add(treeViewMolecule, 2, 1);
             tableLayoutMain.Controls.Add(treeViewAccord, 1, 1);
+            tableLayoutMain.Controls.Add(treeViewPerfume, 0, 1);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
@@ -442,6 +444,15 @@
             splitContainer1.SplitterDistance = 809;
             splitContainer1.TabIndex = 0;
             // 
+            // treeViewPerfume
+            // 
+            treeViewPerfume.AllowDrop = true;
+            treeViewPerfume.Dock = DockStyle.Fill;
+            treeViewPerfume.Location = new Point(3, 33);
+            treeViewPerfume.Name = "treeViewPerfume";
+            treeViewPerfume.Size = new Size(264, 599);
+            treeViewPerfume.TabIndex = 5;
+            // 
             // FormPerfumeCreator
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -515,5 +526,6 @@
         private ToolStripMenuItem viewportMaterialUnitToolStripMenuItem;
         private ToolStripMenuItem dropsToolStripMenuItem;
         private ToolStripMenuItem milligramToolStripMenuItem;
+        private TreeView treeViewPerfume;
     }
 }
