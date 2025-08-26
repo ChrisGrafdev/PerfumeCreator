@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
+    public static class CreatorSettings
+    {
+        public static string Perfumer = "unnamed";
+        //...
+    }
+
     public static class Globals
     {
         public static float DropWeight = 15.0f;
@@ -13,6 +19,13 @@ namespace PerfumeCreator
         {
             Globals.DropWeight = dropWeight;
         }
+        public static UnitType ViewportMaterialUnit = UnitType.Drops;
+    }
+
+    public enum DilutionTarget
+    {
+        TargetAmount,
+        InputAmount
     }
 
     public enum UnitType
@@ -21,56 +34,34 @@ namespace PerfumeCreator
         Milligram
     }
 
+    public enum NoteLevel
+    {
+        HeadNote,
+        HeartNote,
+        BaseNote,
+        UNKNOWN
+    }
+
+    public enum ScentCategory
+    {
+        Woody,
+        Earthy,
+        Musky,
+        Leather,
+        Aromatic,
+        Citrusy,
+        Marine,
+        Green,
+        Fruity,
+        Floral,
+        Oriental,
+        UNKNOWN
+    }
+
     public enum DilutionType
     {
         Oil,
         Alcohol,
         Mix
-    };
-
-    public class MaterialUnit
-    {
-        public MaterialUnit()
-        {
-            _amountDrops = 0;
-            _amountMilligram = 0;
-        }
-
-        public MaterialUnit(UnitType unitType, float unitAmount)
-        {
-            updateMaterialAmount(unitType, unitAmount);
-        }
-
-        public float GetDropAmount()
-        { return _amountDrops; }
-
-        public float GetMilligramAmount()
-        { return _amountMilligram; }
-
-        public void updateMaterialAmount(UnitType unitType, float unitAmount)
-        {
-            if (unitType == UnitType.Drops)
-            {
-                _amountDrops = unitAmount;
-                _amountMilligram = DropsToMilligram(unitAmount);
-            }
-            else
-            {
-                _amountDrops = MilligramToDrops(unitAmount);
-                _amountMilligram = unitAmount;
-            }
-        }
-        public float DropsToMilligram(float drops)
-        {
-            return Globals.DropWeight * drops;
-        }
-
-        public float MilligramToDrops(float milligrams)
-        {
-            return milligrams / Globals.DropWeight;
-        }
-
-        private float _amountDrops;
-        private float _amountMilligram;
     }
 }

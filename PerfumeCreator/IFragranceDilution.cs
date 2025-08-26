@@ -8,11 +8,28 @@ namespace PerfumeCreator
 {
     public interface IFragranceDilution
     {
-        public static abstract (float concentration, float amount, DilutionType resultType) CalcDilution(Fragrance baseMaterial, MaterialUnit baseAmount, Diluent addedComponent, MaterialUnit componentAmount);
+        public void diluteFragrance(Diluent addedComponent, MaterialUnit componentAmount, MaterialUnit? specificBaseAmount = null);
+        public void updatePrice(Diluent addedComponent, MaterialUnit componentAmount, MaterialUnit? specificBaseAmount = null);
+        public void updatePrice(Fragrance addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null);
     }
 
     public interface IFragranceMixture
     {
-        public static abstract (float concentration, float amount, DilutionType resultType) CalcMixture((Fragrance baseMaterial, MaterialUnit baseAmount, Fragrance addedFragrance, MaterialUnit fragranceAmount);
+        public void mixFragrance(Fragrance addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null);
+    }
+
+    public interface IAccordCompatible
+    {
+        float FragranceConcentration {  get; }
+        DilutionType DilutionType { get; }
+        MaterialUnit FullAmount { get; }
+        float TotalPrice { get; }
+    }
+    public interface IPerfumeCompatible
+    {
+        float FragranceConcentration { get; }
+        DilutionType DilutionType { get; }
+        MaterialUnit FullAmount { get; }
+        float TotalPrice { get; }
     }
 }
