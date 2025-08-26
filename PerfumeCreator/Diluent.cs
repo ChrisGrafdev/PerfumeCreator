@@ -6,72 +6,25 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public static class Globals
+    public abstract class Diluent : IAccordCompatible, IPerfumeCompatible
     {
-        public static float DropWeight = 15.0f;
-        public static void SetDropWeight(float dropWeight)
+        public float FragranceConcentration => 0.0f;
+        public DilutionType DilutionType => _diluentType;
+        public MaterialUnit FullAmount => _fullAmount;
+        public float TotalPrice => _totalPrice;
+
+        public Diluent(string name, DilutionType type, float fullPrice, MaterialUnit dilutionAmount)
         {
-            Globals.DropWeight = dropWeight;
+            _name = name;
+            _pricePerMilligram = fullPrice / dilutionAmount.GetMilligramAmount();
+            _diluentType = type;
+            _totalPrice = fullPrice;
+            _fullAmount = dilutionAmount;
         }
-    }
-
-    public enum UnitType
-    {
-        Drops,
-        Milligram
-    }
-
-    public class MaterialUnit
-    {
-        private float _amountDrops;
-        private float _amountMilligram;
-
-        public float GetDropAmount()
-        { return _amountDrops; }
-
-        public float GetMilligramAmount()
-        { return _amountMilligram; }
-
-        public void updateMaterialAmount(UnitType unitType, float unitAmount)
-        {
-            if (unitType == UnitType.Drops)
-            {
-                _amountDrops = unitAmount;
-                _amountMilligram = DropsToMilligram(unitAmount);
-            }
-            else
-            {
-                _amountDrops = MilligramToDrops(unitAmount);
-                _amountMilligram = unitAmount;
-            }
-        }
-
-        public MaterialUnit()
-        {
-            _amountDrops = 0;
-            _amountMilligram = 0;
-        }
-
-        public MaterialUnit(UnitType unitType, float unitAmount)
-        {
-            updateMaterialAmount(unitType, unitAmount);
-        }
-
-        public float DropsToMilligram(float drops)
-        {
-            return Globals.DropWeight * drops;
-        }
-
-        public float MilligramToDrops(float milligrams)
-        {
-            return milligrams / Globals.DropWeight;
-        }
-    }
-
-    public abstract class Diluent
-    {
         public string _name { get; set; }
-        public float _preis { get; set; }
-        public MaterialUnit _materialAmount { get; set; }
+        public float _pricePerMilligram { get; set; }
+        public float _totalPrice { get; set; }
+        public MaterialUnit _fullAmount { get; set; }
+        public DilutionType _diluentType { get; set; }
     }
 }
