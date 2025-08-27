@@ -1,6 +1,6 @@
 ﻿namespace PerfumeCreator
 {
-    partial class FormCreateAccord
+    partial class FormCreateCollection
     {
         /// <summary>
         /// Required designer variable.
@@ -134,7 +134,7 @@
             labelAccCreateName.Name = "labelAccCreateName";
             labelAccCreateName.Size = new Size(152, 30);
             labelAccCreateName.TabIndex = 0;
-            labelAccCreateName.Text = "Accord Name";
+            labelAccCreateName.Text = "Collection Name";
             labelAccCreateName.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // textBoxAccCreateName
@@ -194,14 +194,14 @@
             buttonAccCreateCancel.UseVisualStyleBackColor = true;
             buttonAccCreateCancel.Click += buttonAccCreateCancel_Click;
             // 
-            // FormCreateAccord
+            // FormCreateCollection
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(397, 209);
             Controls.Add(tableLayoutAccCreate);
-            Name = "FormCreateAccord";
-            Text = "Create Accord";
+            Name = "FormCreateCollection";
+            Text = "Create";
             tableLayoutAccCreate.ResumeLayout(false);
             tableLayoutAccCreate.PerformLayout();
             tableLayoutPanelAccCreateSaveCancel.ResumeLayout(false);

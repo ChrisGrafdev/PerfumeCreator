@@ -10,20 +10,52 @@ using System.Windows.Forms;
 
 namespace PerfumeCreator
 {
-    public partial class FormCreateAccord : Form
+    public partial class FormCreateCollection : Form
     {
         public event Action<Accord> CreateAccordAction;
+        private FormComponentUseCase _formComponentUseCase;
+        private object _base;
+        private MaterialUnit _materialUnit;
+        private string _name;
+        private ScentCategory _scentCategory;
+        private NoteLevel _noteLevel;
+        private string _comment;
 
-        public FormCreateAccord(IAccordCompatible compatibleBase)
+        private void FormInstanciator(object compatibleBase)
+        {
+            if (_formComponentUseCase == FormComponentUseCase.Accord)
+            {
+                this.Text += (" " + "Accord");
+                comboBoxAccCreateCategory.DataSource = Enum.GetValues(typeof(ScentCategory));
+                comboBoxAccCreateNoteLevel.DataSource = Enum.GetValues(typeof(NoteLevel));
+            }
+            else if (_formComponentUseCase == FormComponentUseCase.Perfume)
+            {
+                this.Text += (" " + "Perfume");
+                labelAccCreateCategory.Text = "";
+                labelAccCreateNoteLevel.Text = "";
+                comboBoxAccCreateCategory.Enabled = false;
+                comboBoxAccCreateNoteLevel.Enabled = false;
+            }
+
+            _base = compatibleBase;
+        }
+
+        public FormCreateCollection(FormComponentUseCase useCase, object compatibleBase)
         {
             InitializeComponent();
             this.AcceptButton = buttonAccCreateSave;
-            string fragranceName = ((Fragrance)compatibleBase)._name;
-            comboBoxAccCreateCategory.DataSource = Enum.GetValues(typeof(ScentCategory));
-            comboBoxAccCreateNoteLevel.DataSource = Enum.GetValues(typeof(NoteLevel));
-            _compatibleBase = compatibleBase;
+            _formComponentUseCase = useCase;
+            FormInstanciator(compatibleBase);
 
             // open MaterialAmount-Form
+            string fragranceName;
+            if (compatibleBase is Fragrance frag)
+                fragranceName = frag._name;
+            else if (compatibleBase is Diluent dil)
+                fragranceName = dil._name;
+            else return; // should not happen!
+            
             var addMaterialAmountWindow = new FormDefineAmount(fragranceName);
             addMaterialAmountWindow.AddAmountAction += (newAmount) =>
             {
@@ -35,22 +67,22 @@ namespace PerfumeCreator
                 _materialUnit = (MaterialUnit)newAmount;
             };
             addMaterialAmountWindow.ShowDialog();
-            //addMaterialAmountWindow.Show();
         }
 
-        private MaterialUnit _materialUnit;
-        private IAccordCompatible _compatibleBase;
-        private string _name;
-        private ScentCategory _scentCategory;
-        private NoteLevel _noteLevel;
-        private string _comment;
+        
         private void buttonAccCreateSave_Click(object sender, EventArgs e)
         {
             if (!checkData()) return;
 
-            Accord accord = new Accord(_name, _compatibleBase, _materialUnit); //_scentCategory, _noteLevel, _comment);
-
-            CreateAccordAction?.Invoke(accord);
+            if (_formComponentUseCase == FormComponentUseCase.Accord)
+            {
+                Accord accord = new Accord(_name, (IAccordCompatible)_base, _materialUnit); //_scentCategory, _noteLevel, _comment);
+                CreateAccordAction?.Invoke(accord);
+            }
+            else
+            {
+                Perfume perfume = new Perfume(_name, (IPerfumeCompatible)_base, _materialUnit);
+            }
 
             this.Close();
         }
@@ -59,8 +91,12 @@ namespace PerfumeCreator
         {
             _name = textBoxAccCreateName.Text;
             if (_name == "") return false;
-            _scentCategory = (ScentCategory)comboBoxAccCreateCategory.SelectedItem;
-            _noteLevel = (NoteLevel)comboBoxAccCreateNoteLevel.SelectedItem;
+
+            if (_formComponentUseCase == FormComponentUseCase.Accord)
+            {
+                _scentCategory = (ScentCategory)comboBoxAccCreateCategory.SelectedItem;
+                _noteLevel = (NoteLevel)comboBoxAccCreateNoteLevel.SelectedItem;
+            }
             _comment = textBoxAccCreateComment.Text;
             return true;
         }
