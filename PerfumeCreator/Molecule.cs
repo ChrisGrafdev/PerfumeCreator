@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Molecule : Fragrance, IAccordCompatible
+    public class Molecule : Fragrance, IOnlyAccordCompatible
     {
         public float FragranceConcentration => _fragranceConcentration;
         public DilutionType DilutionType => _dilutionType;

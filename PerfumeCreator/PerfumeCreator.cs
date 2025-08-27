@@ -140,7 +140,7 @@ namespace PerfumeCreator
                         toolStripStatusLabelMain.Text = "Amount is required, abort adding new Element";
                         return;
                     }
-                    var (accordCompatible, _) = ((IAccordCompatible, MaterialUnit))targetNode.Tag;
+                    var (accordCompatible, _) = ((IOnlyAccordCompatible, MaterialUnit))targetNode.Tag;
                     targetNode.Tag = (accordCompatible, (MaterialUnit)newAmount);
                     targetNode.Text = frag._name + " : " + ((MaterialUnit)newAmount).GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                 };
@@ -211,7 +211,7 @@ namespace PerfumeCreator
                 TreeNode accordNode = new TreeNode(subAccord._name + " : " + amountString);
                 accordNode.Tag = (subAccord, amount);
                 return accordNode;
-            }*/
+            }
             // Error -> should not accure due to previous checks
             toolStripStatusLabelMain.Text = "Error while converting Molecules/Accords to Nodes";
             return null;

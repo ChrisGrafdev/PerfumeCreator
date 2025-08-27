@@ -15,16 +15,16 @@ namespace PerfumeCreator
         public string _comment { get; set; }
     }*/
 
-    public class Accord : Fragrance, IFragranceMixture, IAccordCompatible, IPerfumeCompatible
+    public class Accord : Fragrance, IFragranceMixture, IOnlyAccordCompatible, IAccordPerfumeCompatible
     {
         public float FragranceConcentration => _fragranceConcentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
 
-        private List<(IAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IAccordCompatible, MaterialUnit)>();
+        private List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IOnlyAccordCompatible, MaterialUnit)>();
         
-        public Accord(string name, IAccordCompatible baseMolecule, MaterialUnit materialUnit)
+        public Accord(string name, IOnlyAccordCompatible baseMolecule, MaterialUnit materialUnit)
             : base(name, baseMolecule.FragranceConcentration, baseMolecule.DilutionType, baseMolecule.FullAmount, baseMolecule.TotalPrice)
         {
             /*
@@ -80,7 +80,7 @@ namespace PerfumeCreator
 
             _fragranceConcentration = rawFragranceAmount / _fullAmount.GetMilligramAmount();
         }
-        public List<(IAccordCompatible Frag, MaterialUnit Amount)> getIngredients()
+        public List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> GetIngredientsList()
         {
             return _ingredientsList;
         }

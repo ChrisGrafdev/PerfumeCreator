@@ -18,14 +18,14 @@ namespace PerfumeCreator
         public void mixFragrance(Fragrance addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null);
     }
 
-    public interface IAccordCompatible
+    public interface IOnlyAccordCompatible
     {
         float FragranceConcentration {  get; }
         DilutionType DilutionType { get; }
         MaterialUnit FullAmount { get; }
         float TotalPrice { get; }
     }
-    public interface IPerfumeCompatible
+    public interface IAccordPerfumeCompatible
     {
         float FragranceConcentration { get; }
         DilutionType DilutionType { get; }

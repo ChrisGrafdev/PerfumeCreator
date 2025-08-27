@@ -76,12 +76,12 @@ namespace PerfumeCreator
 
             if (_formComponentUseCase == FormComponentUseCase.Accord)
             {
-                Accord accord = new Accord(_name, (IAccordCompatible)_base, _materialUnit); //_scentCategory, _noteLevel, _comment);
+                Accord accord = new Accord(_name, (IOnlyAccordCompatible)_base, _materialUnit); //_scentCategory, _noteLevel, _comment);
                 CreateAccordAction?.Invoke(accord);
             }
             else
             {
-                Perfume perfume = new Perfume(_name, (IPerfumeCompatible)_base, _materialUnit);
+                Perfume perfume = new Perfume(_name, (IAccordPerfumeCompatible)_base, _materialUnit);
             }
 
             this.Close();

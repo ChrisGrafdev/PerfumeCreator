@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Perfume : Fragrance, IPerfumeCompatible
+    public class Perfume : Fragrance
     {
         public float FragranceConcentration => _fragranceConcentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
 
-        private List<(IPerfumeCompatible Accord, MaterialUnit Amount)> _ingredientsList = new List<(IPerfumeCompatible, MaterialUnit)>();
+        private List<(IAccordPerfumeCompatible Accord, MaterialUnit Amount)> _ingredientsList = new List<(IAccordPerfumeCompatible, MaterialUnit)>();
 
-        public Perfume(string name, IPerfumeCompatible baseAccord, MaterialUnit materialUnit)
+        public Perfume(string name, IAccordPerfumeCompatible baseAccord, MaterialUnit materialUnit)
             : base(name, baseAccord.FragranceConcentration, baseAccord.DilutionType, baseAccord.FullAmount, baseAccord.TotalPrice)
         {
             _ingredientsList.Add((Accord: baseAccord, Amount: materialUnit));
@@ -73,6 +73,11 @@ namespace PerfumeCreator
             float requiredDilutionML = finalMilliliter - perfumeRawMatML * scaleFactor; // get dilution ML amount based on rescaled raw materials
             float requiredDilutionMG = MaterialUnit.MilliliterToMilligram(requiredDilutionML, finalDilutionMaterial);
             return (requiredDilutionMG, scaleFactor);
+        }
+
+        public List<(IAccordPerfumeCompatible Accord, MaterialUnit Amount)> GetIngredientsList()
+        {
+            return _ingredientsList;
         }
     }
 }

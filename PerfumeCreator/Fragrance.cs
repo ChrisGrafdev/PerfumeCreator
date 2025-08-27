@@ -30,7 +30,7 @@ namespace PerfumeCreator
             _pricePerMilligram = fullPrice / materialAmount.GetMilligramAmount();
             _totalPrice = fullPrice;
             _fullAmount = materialAmount;
-            _noteLevel = noteLevel;
+            _noteLevel = noteLevel; 
         }
         public void diluteFragrance(Diluent addedComponent, MaterialUnit componentAmount, MaterialUnit? specificBaseAmount = null)
         {

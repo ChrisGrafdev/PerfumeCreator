@@ -22,6 +22,12 @@ namespace PerfumeCreator
         public static UnitType ViewportMaterialUnit = UnitType.Drops;
     }
 
+    public enum FormComponentUseCase
+    {
+        Accord,
+        Perfume
+    }
+
     public enum DilutionTarget
     {
         TargetAmount,
