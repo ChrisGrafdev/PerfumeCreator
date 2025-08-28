@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Perfume : Fragrance
+    public class Perfume : Basis
     {
-        public float FragranceConcentration => _fragranceConcentration;
+        public float FragranceConcentration => _concentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
@@ -36,7 +36,7 @@ namespace PerfumeCreator
             }
         }
 
-        public void mixFragrance(Fragrance addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null)
+        public void mixFragrance(Basis addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null)
         {
             if (_dilutionType != addedFragrance._dilutionType)
             {
@@ -46,7 +46,7 @@ namespace PerfumeCreator
             float rawFragranceAmount;
             if (specificBaseAmount != null)
             {
-                rawFragranceAmount = _fragranceConcentration * specificBaseAmount.GetMilligramAmount();
+                rawFragranceAmount = _concentration * specificBaseAmount.GetMilligramAmount();
                 float newMaterialAmount = specificBaseAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount();
                 if (_fullAmount != null)
                     _fullAmount.updateMaterialAmount(UnitType.Milligram, newMaterialAmount);
@@ -58,11 +58,11 @@ namespace PerfumeCreator
                 if (_fullAmount == null) // maybe handle it in a better way?
                     throw new ArgumentNullException(nameof(_fullAmount), "Fragrance-base amount is not defined");
 
-                rawFragranceAmount = _fragranceConcentration * _fullAmount.GetMilligramAmount();
+                rawFragranceAmount = _concentration * _fullAmount.GetMilligramAmount();
                 _fullAmount.updateMaterialAmount(UnitType.Milligram, _fullAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount());
             }
 
-            _fragranceConcentration = rawFragranceAmount / _fullAmount.GetMilligramAmount();
+            _concentration = rawFragranceAmount / _fullAmount.GetMilligramAmount();
         }
 
         public (float fillUpMilligramAmount, float perfumeRawMatFactor) calcFillUpMilligramAmount(float finalMilliliter, float finalPerfumeConcentrationPercent, DilutionType finalDilutionMaterial)

@@ -6,80 +6,80 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    /*
-    public class DummyAccord
+    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible
     {
-        public string _name {  get; set; }
-        public ScentCategory _scentCategory { get; set; }
-        public NoteLevel _noteLevel { get; set; }
-        public string _comment { get; set; }
-    }*/
-
-    public class Accord : Fragrance, IFragranceMixture, IOnlyAccordCompatible, IAccordPerfumeCompatible
-    {
-        public float FragranceConcentration => _fragranceConcentration;
+        // interface definition
+        public float Concentration => _concentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
+        // ---
 
+        public NoteLevel _noteLevel { get; set; }
+        public ScentCategory _scentCategory { get; set; }
         private List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IOnlyAccordCompatible, MaterialUnit)>();
         
-        public Accord(string name, IOnlyAccordCompatible baseMolecule, MaterialUnit materialUnit)
-            : base(name, baseMolecule.FragranceConcentration, baseMolecule.DilutionType, baseMolecule.FullAmount, baseMolecule.TotalPrice)
+        /// <summary>
+        /// Constructor to create an Accord based on an existing IOnlyAccordCompatible object (Molecule/Accord/Diluent)
+        /// </summary>
+        /// <param name="name"></param> defines the name of the created Accord
+        /// <param name="baseComponent"></param> sets the base/initial component
+        /// <param name="baseMaterialAmount"></param> defines the amount of the baseComponent putted into the Accord
+        /// <param name="scentCategory"></param> defines the scent category of the Accord
+        /// <param name="noteLevel"></param> defines the note type (Head/Heart/Base) of the Accord
+        /// <exception cref="ArgumentException"></exception>
+        public Accord(
+            string name,
+            IOnlyAccordCompatible baseComponent,
+            MaterialUnit baseMaterialAmount,
+            ScentCategory scentCategory = ScentCategory.UNKNOWN,
+            NoteLevel noteLevel = NoteLevel.UNKNOWN,
+            string? description = null,
+            string? comment = null)
+            : base(
+                  name,
+                  baseComponent.FullAmount,
+                  baseComponent.Concentration,
+                  baseComponent.TotalPrice,
+                  baseComponent.DilutionType,
+                  description,
+                  comment)
         {
-            /*
-             *  -> shift adding/mixing new component into seperate function
-             */
-            _ingredientsList.Add((Frag: baseMolecule, Amount: materialUnit));
-            if(_ingredientsList.Count > 1)
-            {
-                if (baseMolecule is Diluent)
-                {
-                    diluteFragrance((Diluent)baseMolecule, materialUnit);
-                    updatePrice((Diluent)baseMolecule, materialUnit);
-                }
-                else if (baseMolecule is Molecule)
-                {
-                    mixFragrance((Molecule)baseMolecule, materialUnit);
-                    updatePrice((Molecule)baseMolecule, materialUnit);
-                }
-                else if (baseMolecule is Accord)
-                {
-                    mixFragrance((Accord)baseMolecule, materialUnit);
-                    updatePrice((Accord)baseMolecule, materialUnit);
-                }
-                else
-                    throw new ArgumentException(nameof(baseMolecule), "Given IAccordCompatible type is rather Diluent, Molecule nor Accord");
-            }
+            //_emptyObject = false;
+            _noteLevel = noteLevel;
+            _scentCategory = scentCategory;
+            AddComponentToAccord(baseComponent, baseMaterialAmount);
         }
-        public void mixFragrance(Fragrance addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null)
+
+        /// <summary>
+        /// Wrapper class for the Basis-internal Mixing-logic
+        /// </summary>
+        /// <param name="newComponent"></param>
+        /// <param name="newComponentAmount"></param>
+        public void AddComponentToAccord(IOnlyAccordCompatible newComponent, MaterialUnit newComponentAmount)
         {
-            if (_dilutionType != addedFragrance._dilutionType)
+            if (_ingredientsList.Count == 0) // first element
             {
-                _dilutionType = DilutionType.Mix;
+                // Accord member variables could be ignored due to handling them automatically when calling the constructor
+                // only adding the first component to the list
+                _ingredientsList.Add((newComponent, newComponentAmount));
+                return;
             }
-
-            float rawFragranceAmount;
-            if (specificBaseAmount != null)
-            {
-                rawFragranceAmount = _fragranceConcentration * specificBaseAmount.GetMilligramAmount();
-                float newMaterialAmount = specificBaseAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount();
-                if (_fullAmount != null)
-                    _fullAmount.updateMaterialAmount(UnitType.Milligram, newMaterialAmount);
-                else
-                    _fullAmount = new MaterialUnit(UnitType.Milligram, newMaterialAmount);
-            }
-            else
-            {
-                if (_fullAmount == null) // maybe handle it in a better way?
-                    throw new ArgumentNullException(nameof(_fullAmount), "Fragrance-base amount is not defined");
-
-                rawFragranceAmount = _fragranceConcentration * _fullAmount.GetMilligramAmount();
-                _fullAmount.updateMaterialAmount(UnitType.Milligram, _fullAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount());
-            }
-
-            _fragranceConcentration = rawFragranceAmount / _fullAmount.GetMilligramAmount();
+            // convert current Accord properties to transferring structure
+            Mixture currentMix = new Mixture(_name, _fullAmount, _concentration, _totalPrice, _dilutionType);
+            (Mixture resMix, MaterialUnit resAmount) = Mixing.MixGeneralFragrance(currentMix, _fullAmount, (Basis)newComponent, newComponentAmount);
+            // update resulting values
+            _fullAmount = resAmount;
+            _concentration = resMix._concentration;
+            _totalPrice = resMix._totalPrice;
+            _dilutionType = resMix._dilutionType;
         }
+
+        public void RemoveComponentFromAccord(int index) //?
+        {
+            //tbd...
+        }
+
         public List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> GetIngredientsList()
         {
             return _ingredientsList;

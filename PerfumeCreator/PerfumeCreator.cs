@@ -129,7 +129,7 @@ namespace PerfumeCreator
                 // Open CreateAccord Window based on current Settings...
                 toolStripStatusLabelMain.Text = "Not implemented yet";
             }
-            else if (targetNode?.Parent != null && targetNode?.Tag is (Fragrance frag, MaterialUnit amount))
+            else if (targetNode?.Parent != null && targetNode?.Tag is (Basis frag, MaterialUnit amount))
             {
                 // open DefineAmount-Form
                 var addMaterialAmountWindow = new FormDefineAmount(frag._name, amount);
@@ -159,7 +159,7 @@ namespace PerfumeCreator
         {
             TreeNode[] propertyNodes = {
                 new TreeNode("Note level: " + molecule._noteLevel.ToString()),
-                new TreeNode("Concentration: " + molecule._fragranceConcentration.ToString()),
+                new TreeNode("Concentration: " + molecule._concentration.ToString()),
                 new TreeNode("Dilution type: " + molecule._dilutionType.ToString()),
                 new TreeNode("Manufacturer: " + molecule._manufacturer.ToString())
             };

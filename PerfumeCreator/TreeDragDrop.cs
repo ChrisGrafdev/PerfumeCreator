@@ -52,7 +52,7 @@ namespace PerfumeCreator
                 else
                 {
                     // open DefineAmount-Form
-                    var addMaterialAmountWindow = new FormDefineAmount(((Fragrance)accordCompatible)._name);
+                    var addMaterialAmountWindow = new FormDefineAmount(((Basis)accordCompatible)._name);
                     addMaterialAmountWindow.AddAmountAction += (newAmount) =>
                     {
                         if (newAmount == null)
@@ -68,7 +68,7 @@ namespace PerfumeCreator
                         }
                         if (targetNode?.Tag is Accord existingAccord)
                         {
-                            if (accordCompatible is Fragrance fragranceComponent)
+                            if (accordCompatible is Basis fragranceComponent)
                             {
                                 existingAccord.mixFragrance(fragranceComponent, materialAmount);
                             }
@@ -136,7 +136,7 @@ namespace PerfumeCreator
                 return null;
             }
 
-            if (accordComponent is Fragrance fragrance)
+            if (accordComponent is Basis fragrance)
             {
                 string amountString = amount.GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                 //if (Globals.ViewportMaterialUnit == UnitType.Drops)

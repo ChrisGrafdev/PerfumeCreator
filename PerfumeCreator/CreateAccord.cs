@@ -50,7 +50,7 @@ namespace PerfumeCreator
 
             // open MaterialAmount-Form
             string fragranceName;
-            if (compatibleBase is Fragrance frag)
+            if (compatibleBase is Basis frag)
                 fragranceName = frag._name;
             else if (compatibleBase is Diluent dil)
                 fragranceName = dil._name;
