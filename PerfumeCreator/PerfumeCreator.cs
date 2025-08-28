@@ -5,7 +5,10 @@ namespace PerfumeCreator
         //#####################################
         // Initial window/application settings
         //#####################################
-        private double mainSplitterRatio = 0.75;
+        private double _mainSplitterRatio = 0.75;
+        private TreeDragDrop _accordTreeViewDDLogic;
+        private TreeDragDrop _perfumeTreeViewDDLogic;
+
         public FormPerfumeCreator()
         {
             InitializeComponent();
@@ -14,6 +17,9 @@ namespace PerfumeCreator
 
             comboBoxDilutionCalcMode.DataSource = Enum.GetValues(typeof(DilutionTarget));
             comboBoxDilutionCalcInputUnit.DataSource = Enum.GetValues(typeof(UnitType));
+
+            _accordTreeViewDDLogic = new TreeDragDrop(FormComponentUseCase.Accord, treeViewAccord, toolStripStatusLabelMain);
+            _perfumeTreeViewDDLogic = new TreeDragDrop(FormComponentUseCase.Perfume, treeViewPerfume, toolStripStatusLabelMain);
         }
 
         //#######################
@@ -21,12 +27,12 @@ namespace PerfumeCreator
         //#######################
         private void PerfumeCreator_Resize(object? sender, EventArgs e) // not working?
         {
-            splitContainerL0.SplitterDistance = (int)(splitContainerL0.Width * mainSplitterRatio);
+            splitContainerL0.SplitterDistance = (int)(splitContainerL0.Width * _mainSplitterRatio);
         }
 
         private void SplitContainerL0_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            mainSplitterRatio = (double)splitContainerL0.SplitterDistance / splitContainerL0.Width;
+            _mainSplitterRatio = (double)splitContainerL0.SplitterDistance / splitContainerL0.Width;
         }
 
 
@@ -279,8 +285,10 @@ namespace PerfumeCreator
             if (!e.Data.GetDataPresent(typeof(TreeNode)))
                 return;
 
-            /*TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-            if (draggedNode?.Tag is IAccordCompatible accordCompatible)
+            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            _accordTreeViewDDLogic.ExecuteTreeNodeDragDrop(draggedNode, e);
+
+            /*if (draggedNode?.Tag is IAccordCompatible accordCompatible)
             {
                 // Get target location
                 Point targetPoint = treeViewAccord.PointToClient(new Point(e.X, e.Y));

@@ -14,14 +14,14 @@ namespace PerfumeCreator
     {
         public event Action<Accord> CreateAccordAction;
         private FormComponentUseCase _formComponentUseCase;
-        private object _base;
+        private Basis _base;
         private MaterialUnit _materialUnit;
         private string _name;
         private ScentCategory _scentCategory;
         private NoteLevel _noteLevel;
         private string _comment;
 
-        private void FormInstanciator(object compatibleBase)
+        private void FormInstanciator()
         {
             if (_formComponentUseCase == FormComponentUseCase.Accord)
             {
@@ -38,23 +38,18 @@ namespace PerfumeCreator
                 comboBoxAccCreateNoteLevel.Enabled = false;
             }
 
-            _base = compatibleBase;
         }
 
-        public FormCreateCollection(FormComponentUseCase useCase, object compatibleBase)
+        public FormCreateCollection(FormComponentUseCase useCase, Basis compatibleBase)
         {
             InitializeComponent();
             this.AcceptButton = buttonAccCreateSave;
             _formComponentUseCase = useCase;
-            FormInstanciator(compatibleBase);
+            FormInstanciator();
+            _base = compatibleBase;
 
             // open MaterialAmount-Form
-            string fragranceName;
-            if (compatibleBase is Basis frag)
-                fragranceName = frag._name;
-            else if (compatibleBase is Diluent dil)
-                fragranceName = dil._name;
-            else return; // should not happen!
+            string fragranceName = compatibleBase._name;
             
             var addMaterialAmountWindow = new FormDefineAmount(fragranceName);
             addMaterialAmountWindow.AddAmountAction += (newAmount) =>

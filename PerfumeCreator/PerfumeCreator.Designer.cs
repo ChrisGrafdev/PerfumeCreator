@@ -47,6 +47,7 @@
             butAddPerfume = new Button();
             treeViewMolecule = new TreeView();
             treeViewAccord = new TreeView();
+            treeViewPerfume = new TreeView();
             tableLayoutSide = new TableLayoutPanel();
             groupBoxDilutionCalc = new GroupBox();
             tableLayoutDilutionCalc = new TableLayoutPanel();
@@ -62,7 +63,6 @@
             labelDilutionCalcDiluentResult = new Label();
             comboBoxDilutionCalcMode = new ComboBox();
             splitContainer1 = new SplitContainer();
-            treeViewPerfume = new TreeView();
             mainMenuStrip.SuspendLayout();
             mainStatusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerL0).BeginInit();
@@ -257,6 +257,15 @@
             treeViewAccord.DragDrop += treeViewAccord_DragDrop;
             treeViewAccord.DragEnter += treeViewAccord_DragEnter;
             // 
+            // treeViewPerfume
+            // 
+            treeViewPerfume.AllowDrop = true;
+            treeViewPerfume.Dock = DockStyle.Fill;
+            treeViewPerfume.Location = new Point(3, 33);
+            treeViewPerfume.Name = "treeViewPerfume";
+            treeViewPerfume.Size = new Size(264, 599);
+            treeViewPerfume.TabIndex = 5;
+            // 
             // tableLayoutSide
             // 
             tableLayoutSide.ColumnCount = 1;
@@ -443,15 +452,6 @@
             splitContainer1.Size = new Size(1191, 995);
             splitContainer1.SplitterDistance = 809;
             splitContainer1.TabIndex = 0;
-            // 
-            // treeViewPerfume
-            // 
-            treeViewPerfume.AllowDrop = true;
-            treeViewPerfume.Dock = DockStyle.Fill;
-            treeViewPerfume.Location = new Point(3, 33);
-            treeViewPerfume.Name = "treeViewPerfume";
-            treeViewPerfume.Size = new Size(264, 599);
-            treeViewPerfume.TabIndex = 5;
             // 
             // FormPerfumeCreator
             // 

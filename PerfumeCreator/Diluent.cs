@@ -6,25 +6,26 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public abstract class Diluent : IOnlyAccordCompatible, IAccordPerfumeCompatible
+    public abstract class Diluent : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible
     {
-        public float FragranceConcentration => 0.0f;
-        public DilutionType DilutionType => _diluentType;
+        // interface definition
+        public float Concentration => 0.0f;
+        public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
+        // ---
 
-        public Diluent(string name, DilutionType type, float fullPrice, MaterialUnit dilutionAmount)
-        {
-            _name = name;
-            _pricePerMilligram = fullPrice / dilutionAmount.GetMilligramAmount();
-            _diluentType = type;
-            _totalPrice = fullPrice;
-            _fullAmount = dilutionAmount;
-        }
-        public string _name { get; set; }
-        public float _pricePerMilligram { get; set; }
-        public float _totalPrice { get; set; }
-        public MaterialUnit _fullAmount { get; set; }
-        public DilutionType _diluentType { get; set; }
+        public Diluent(
+            string name,
+            MaterialUnit dilutionAmount,
+            float fullPrice,
+            DilutionType dilutionType)
+            : base(
+                  name,
+                  dilutionAmount,
+                  0.0f,
+                  fullPrice,
+                  dilutionType)
+        { }
     }
 }

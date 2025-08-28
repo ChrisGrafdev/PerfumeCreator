@@ -8,71 +8,60 @@ namespace PerfumeCreator
 {
     public class Perfume : Basis
     {
+        /*
         public float FragranceConcentration => _concentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
         public float TotalPrice => _totalPrice;
-
+        */
+        
         private List<(IAccordPerfumeCompatible Accord, MaterialUnit Amount)> _ingredientsList = new List<(IAccordPerfumeCompatible, MaterialUnit)>();
 
-        public Perfume(string name, IAccordPerfumeCompatible baseAccord, MaterialUnit materialUnit)
-            : base(name, baseAccord.FragranceConcentration, baseAccord.DilutionType, baseAccord.FullAmount, baseAccord.TotalPrice)
+        public Perfume(
+            string name,
+            IAccordPerfumeCompatible baseComponent,
+            MaterialUnit baseMaterialAmount,
+            string? description = null,
+            string? comment = null)
+            : base(
+                  name,
+                  baseComponent.FullAmount,
+                  baseComponent.Concentration,
+                  baseComponent.TotalPrice,
+                  baseComponent.DilutionType,
+                  description,
+                  comment)
         {
-            _ingredientsList.Add((Accord: baseAccord, Amount: materialUnit));
-            if (_ingredientsList.Count > 1)
-            {
-                if (baseAccord is Diluent)
-                {
-                    diluteFragrance((Diluent)baseAccord, materialUnit);
-                    updatePrice((Diluent)baseAccord, materialUnit);
-                }
-                else if (baseAccord is Accord)
-                {
-                    mixFragrance((Accord)baseAccord, materialUnit);
-                    updatePrice((Accord)baseAccord, materialUnit);
-                }
-                else
-                    throw new ArgumentException(nameof(baseAccord), "Given IPerfumeCompatible type is rather Diluent nor Accord");
-            }
+            
         }
 
-        public void mixFragrance(Basis addedFragrance, MaterialUnit fragranceAmount, MaterialUnit? specificBaseAmount = null)
+        /// <summary>
+        /// Wrapper class for the Basis-internal Mixing-logic
+        /// </summary>
+        /// <param name="newComponent"></param>
+        /// <param name="newComponentAmount"></param>
+        public void AddComponentToPerfume(IAccordPerfumeCompatible newComponent, MaterialUnit newComponentAmount)
         {
-            if (_dilutionType != addedFragrance._dilutionType)
+            if (_ingredientsList.Count == 0) // first element
             {
-                _dilutionType = DilutionType.Mix;
+                // Perfume member variables could be ignored due to handling them automatically when calling the constructor
+                // only adding the first component to the list
+                _ingredientsList.Add((newComponent, newComponentAmount));
+                return;
             }
-
-            float rawFragranceAmount;
-            if (specificBaseAmount != null)
-            {
-                rawFragranceAmount = _concentration * specificBaseAmount.GetMilligramAmount();
-                float newMaterialAmount = specificBaseAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount();
-                if (_fullAmount != null)
-                    _fullAmount.updateMaterialAmount(UnitType.Milligram, newMaterialAmount);
-                else
-                    _fullAmount = new MaterialUnit(UnitType.Milligram, newMaterialAmount);
-            }
-            else
-            {
-                if (_fullAmount == null) // maybe handle it in a better way?
-                    throw new ArgumentNullException(nameof(_fullAmount), "Fragrance-base amount is not defined");
-
-                rawFragranceAmount = _concentration * _fullAmount.GetMilligramAmount();
-                _fullAmount.updateMaterialAmount(UnitType.Milligram, _fullAmount.GetMilligramAmount() + fragranceAmount.GetMilligramAmount());
-            }
-
-            _concentration = rawFragranceAmount / _fullAmount.GetMilligramAmount();
+            // convert current Perfume properties to transferring structure
+            Mixture currentMix = new Mixture(_name, _fullAmount, _concentration, _totalPrice, _dilutionType);
+            (Mixture resMix, MaterialUnit resAmount) = Mixing.MixGeneralFragrance(currentMix, _fullAmount, (Basis)newComponent, newComponentAmount);
+            // update resulting values
+            _fullAmount = resAmount;
+            _concentration = resMix._concentration;
+            _totalPrice = resMix._totalPrice;
+            _dilutionType = resMix._dilutionType;
         }
 
-        public (float fillUpMilligramAmount, float perfumeRawMatFactor) calcFillUpMilligramAmount(float finalMilliliter, float finalPerfumeConcentrationPercent, DilutionType finalDilutionMaterial)
+        public void RemoveComponentFromPerfume(int index) //?
         {
-            float perfumeRawMatML = _fullAmount.MixtureToMilliliter(_dilutionType); // ml amount of raw perfume material-mixture
-            float mlAmountFromCurrentFragranceAmount = perfumeRawMatML / finalPerfumeConcentrationPercent * 100.0f; // resulting diluted perfume amount based on current raw material amount and the final perfume percentage
-            float scaleFactor = finalMilliliter / mlAmountFromCurrentFragranceAmount; // calculation of the scaling factor to reach the desired perfume amount
-            float requiredDilutionML = finalMilliliter - perfumeRawMatML * scaleFactor; // get dilution ML amount based on rescaled raw materials
-            float requiredDilutionMG = MaterialUnit.MilliliterToMilligram(requiredDilutionML, finalDilutionMaterial);
-            return (requiredDilutionMG, scaleFactor);
+            //tbd...
         }
 
         public List<(IAccordPerfumeCompatible Accord, MaterialUnit Amount)> GetIngredientsList()

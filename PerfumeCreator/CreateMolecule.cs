@@ -47,7 +47,14 @@ namespace PerfumeCreator
                 return; 
             }
 
-            Molecule molecule = new Molecule(_name, _concentration, _dilutionType, _materialUnit, _scentCategory, _fullPrice, _noteLevel, _manufacturer);
+            Molecule molecule = new Molecule(_name, _materialUnit, _concentration, _fullPrice, _dilutionType, _scentCategory ,_noteLevel, _manufacturer);
+            
+            
+            
+            // check afterwards....
+            
+            
+            
             if (textBoxMolCreateDescription.Text.Length > 0 )
                 molecule._description = textBoxMolCreateDescription.Text;
             if (textBoxMolCreateScents.Text.Length > 0 )
