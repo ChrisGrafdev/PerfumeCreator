@@ -38,6 +38,9 @@
             viewportMaterialUnitToolStripMenuItem = new ToolStripMenuItem();
             dropsToolStripMenuItem = new ToolStripMenuItem();
             milligramToolStripMenuItem = new ToolStripMenuItem();
+            accordTransitionSettingToolStripMenuItem = new ToolStripMenuItem();
+            fullCopyToolStripMenuItem = new ToolStripMenuItem();
+            linkOnlyToolStripMenuItem = new ToolStripMenuItem();
             mainStatusStrip = new StatusStrip();
             toolStripStatusLabelMain = new ToolStripStatusLabel();
             splitContainerL0 = new SplitContainer();
@@ -122,16 +125,16 @@
             // 
             // generalSettingsToolStripMenuItem
             // 
-            generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem });
+            generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem, accordTransitionSettingToolStripMenuItem });
             generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            generalSettingsToolStripMenuItem.Size = new Size(159, 22);
+            generalSettingsToolStripMenuItem.Size = new Size(180, 22);
             generalSettingsToolStripMenuItem.Text = "General Settings";
             // 
             // viewportMaterialUnitToolStripMenuItem
             // 
             viewportMaterialUnitToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dropsToolStripMenuItem, milligramToolStripMenuItem });
             viewportMaterialUnitToolStripMenuItem.Name = "viewportMaterialUnitToolStripMenuItem";
-            viewportMaterialUnitToolStripMenuItem.Size = new Size(191, 22);
+            viewportMaterialUnitToolStripMenuItem.Size = new Size(204, 22);
             viewportMaterialUnitToolStripMenuItem.Text = "Viewport material unit";
             // 
             // dropsToolStripMenuItem
@@ -149,6 +152,29 @@
             milligramToolStripMenuItem.Size = new Size(154, 22);
             milligramToolStripMenuItem.Text = "Milligram (mg)";
             milligramToolStripMenuItem.Click += milligramToolStripMenuItem_Click;
+            // 
+            // accordTransitionSettingToolStripMenuItem
+            // 
+            accordTransitionSettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { fullCopyToolStripMenuItem, linkOnlyToolStripMenuItem });
+            accordTransitionSettingToolStripMenuItem.Name = "accordTransitionSettingToolStripMenuItem";
+            accordTransitionSettingToolStripMenuItem.Size = new Size(204, 22);
+            accordTransitionSettingToolStripMenuItem.Text = "Accord transition setting";
+            // 
+            // fullCopyToolStripMenuItem
+            // 
+            fullCopyToolStripMenuItem.Name = "fullCopyToolStripMenuItem";
+            fullCopyToolStripMenuItem.Size = new Size(180, 22);
+            fullCopyToolStripMenuItem.Text = "Full copy";
+            fullCopyToolStripMenuItem.Click += fullCopyToolStripMenuItem_Click;
+            // 
+            // linkOnlyToolStripMenuItem
+            // 
+            linkOnlyToolStripMenuItem.Checked = true;
+            linkOnlyToolStripMenuItem.CheckState = CheckState.Checked;
+            linkOnlyToolStripMenuItem.Name = "linkOnlyToolStripMenuItem";
+            linkOnlyToolStripMenuItem.Size = new Size(180, 22);
+            linkOnlyToolStripMenuItem.Text = "Link only";
+            linkOnlyToolStripMenuItem.Click += linkOnlyToolStripMenuItem_Click;
             // 
             // mainStatusStrip
             // 
@@ -265,6 +291,8 @@
             treeViewPerfume.Name = "treeViewPerfume";
             treeViewPerfume.Size = new Size(264, 599);
             treeViewPerfume.TabIndex = 5;
+            treeViewPerfume.DragDrop += treeViewPerfume_DragDrop;
+            treeViewPerfume.DragEnter += treeViewPerfume_DragEnter;
             // 
             // tableLayoutSide
             // 
@@ -527,5 +555,8 @@
         private ToolStripMenuItem dropsToolStripMenuItem;
         private ToolStripMenuItem milligramToolStripMenuItem;
         private TreeView treeViewPerfume;
+        private ToolStripMenuItem accordTransitionSettingToolStripMenuItem;
+        private ToolStripMenuItem fullCopyToolStripMenuItem;
+        private ToolStripMenuItem linkOnlyToolStripMenuItem;
     }
 }

@@ -18,6 +18,7 @@ namespace PerfumeCreator
         public ScentCategory _scentCategory { get; set; }
         public NoteLevel _noteLevel { get; set; }
         public string _manufacturer { get; set; }
+        public List<string>? _scents { get; set; }
 
         /*public Molecule(string name) : base(name)
         {
@@ -34,7 +35,8 @@ namespace PerfumeCreator
             NoteLevel noteLevel = NoteLevel.UNKNOWN,
             string manufacturer = "unkown",
             string? description = null,
-            string? comment = null)
+            string? comment = null,
+            List<string>? scentList = null)
             : base(
                   name,
                   materialAmount,
@@ -47,6 +49,7 @@ namespace PerfumeCreator
             _noteLevel = noteLevel;
             _scentCategory = scentCategory;
             _manufacturer = manufacturer;
+            _scents = scentList;
         }
     }
 }

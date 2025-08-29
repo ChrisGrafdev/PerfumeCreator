@@ -20,6 +20,7 @@ namespace PerfumeCreator
             Globals.DropWeight = dropWeight;
         }
         public static UnitType ViewportMaterialUnit = UnitType.Drops;
+        public static CopyOrLink CopyOrLinkSetting = CopyOrLink.Link;
     }
 
     public enum FormComponentUseCase
@@ -38,6 +39,12 @@ namespace PerfumeCreator
     {
         Drops,
         Milligram
+    }
+
+    public enum CopyOrLink
+    {
+        Copy,
+        Link
     }
 
     public enum NoteLevel

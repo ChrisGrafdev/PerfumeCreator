@@ -43,24 +43,25 @@ namespace PerfumeCreator
         {
             if (!checkData())
             {
-                // invoke function for input checking - tbd
-                return; 
+                CreateMoleculeAction?.Invoke(null);
             }
 
-            Molecule molecule = new Molecule(_name, _materialUnit, _concentration, _fullPrice, _dilutionType, _scentCategory ,_noteLevel, _manufacturer);
-            
-            
-            
-            // check afterwards....
-            
-            
+            Molecule molecule = new Molecule(
+                _name,
+                _materialUnit,
+                _concentration,
+                _fullPrice,
+                _dilutionType,
+                _scentCategory,
+                _noteLevel,
+                _manufacturer);
             
             if (textBoxMolCreateDescription.Text.Length > 0 )
                 molecule._description = textBoxMolCreateDescription.Text;
-            if (textBoxMolCreateScents.Text.Length > 0 )
-                molecule._scents = textBoxMolCreateScents.Text.Split(',').ToList();
             if (textBoxMolCreateComment.Text.Length > 0)
                 molecule._comment = textBoxMolCreateComment.Text;
+            if (textBoxMolCreateScents.Text.Length > 0 )
+                molecule._scents = textBoxMolCreateScents.Text.Split(',').ToList();
 
             CreateMoleculeAction?.Invoke(molecule);
 

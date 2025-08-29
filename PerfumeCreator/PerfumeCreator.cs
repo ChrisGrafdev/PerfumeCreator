@@ -227,6 +227,7 @@ namespace PerfumeCreator
         // Drap&Drop functionality
         //#########################
 
+        // Molecule func.
         private void treeViewMolecule_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var item = e.Item;
@@ -244,6 +245,7 @@ namespace PerfumeCreator
             }
         }
 
+        // Accord func.
         private void treeViewAccord_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var item = e.Item;
@@ -266,12 +268,9 @@ namespace PerfumeCreator
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
                 TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-                if (draggedNode?.Tag is Accord)
-                {
+                if (draggedNode?.Tag is Accord && Globals.CopyOrLinkSetting == CopyOrLink.Link)
                     e.Effect = DragDropEffects.Link;
-                }
-                else
-                    e.Effect = DragDropEffects.Copy;
+                e.Effect = DragDropEffects.Copy;
             }
             else
             {
@@ -364,6 +363,33 @@ namespace PerfumeCreator
             }*/
         }
 
+        // Perfume func
+        private void treeViewPerfume_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                if (draggedNode?.Tag is Accord && Globals.CopyOrLinkSetting == CopyOrLink.Link)
+                    e.Effect = DragDropEffects.Link;
+                else
+                    e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void treeViewPerfume_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e == null) return;
+            if (!e.Data.GetDataPresent(typeof(TreeNode)))
+                return;
+
+            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            _perfumeTreeViewDDLogic.ExecuteTreeNodeDragDrop(draggedNode, e);
+        }
+
 
         //###################################
         // Application Setting Functionality
@@ -385,5 +411,18 @@ namespace PerfumeCreator
             dropsToolStripMenuItem.Checked = false;
         }
 
+        private void fullCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.CopyOrLinkSetting = CopyOrLink.Copy;
+            fullCopyToolStripMenuItem.Checked = true;
+            linkOnlyToolStripMenuItem.Checked = false;
+        }
+
+        private void linkOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.CopyOrLinkSetting = CopyOrLink.Link;
+            linkOnlyToolStripMenuItem.Checked = true;
+            fullCopyToolStripMenuItem.Checked = false;
+        }
     }
 }
