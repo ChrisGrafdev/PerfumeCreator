@@ -57,5 +57,10 @@ namespace PerfumeCreator
             AddAmountAction?.Invoke(null);
             this.Close();
         }
+
+        private void FormDefineAmount_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            AddAmountAction?.Invoke(null);
+        }
     }
 }

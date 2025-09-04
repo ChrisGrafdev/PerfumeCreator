@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Perfume : Basis
+    public class Perfume : Basis, ICollectionReturn
     {
         /*
         public float FragranceConcentration => _concentration;
@@ -32,7 +32,7 @@ namespace PerfumeCreator
                   description,
                   comment)
         {
-            
+            AddComponentToPerfume(baseComponent, baseMaterialAmount);
         }
 
         /// <summary>

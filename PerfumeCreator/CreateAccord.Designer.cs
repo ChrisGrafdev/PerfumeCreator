@@ -202,6 +202,7 @@
             Controls.Add(tableLayoutAccCreate);
             Name = "FormCreateCollection";
             Text = "Create";
+            FormClosing += FormCreateCollection_FormClosing;
             tableLayoutAccCreate.ResumeLayout(false);
             tableLayoutAccCreate.PerformLayout();
             tableLayoutPanelAccCreateSaveCancel.ResumeLayout(false);

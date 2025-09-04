@@ -24,7 +24,7 @@ namespace PerfumeCreator
             object compatible = draggedNode?.Tag;
             if (compatible == null || e == null) return false;
 
-            if (compatible is IOnlyAccordCompatible && _formComponentUseCase != FormComponentUseCase.Accord)
+            if (compatible is not IAccordPerfumeCompatible && _formComponentUseCase != FormComponentUseCase.Accord)
                 return false; // wrong usecase
 
             if (compatible is IOnlyAccordCompatible || compatible is IAccordPerfumeCompatible)
@@ -36,27 +36,37 @@ namespace PerfumeCreator
                 // Create new/first (root) Accord/Perfume entry
                 if (targetNode == null)
                 {
+                    Action<object?> createCollectionHandler = null;
                     // open CreateAccord-Form
                     var createCollectionWindow = new FormCreateCollection(_formComponentUseCase, (Basis)compatible);
-                    createCollectionWindow.CreateAccordAction += (newCollection) =>
+                    //createCollectionWindow.CreateCollectionAction += (newCollection) =>
+                    createCollectionHandler = (newCollection) =>
                     {
+                        createCollectionWindow.CreateCollectionAction -= createCollectionHandler;
                         if (newCollection == null)
                         {
                             if (_refStatusLabel != null) _refStatusLabel.Text = "Abort creation of new accord";
                             return;
                         }
-                        TreeNode newCollectionNode = CollectionAsTreeNode(newCollection);
+                        TreeNode newCollectionNode = CollectionAsTreeNode((Basis)newCollection);
                         _refTreeView.Nodes.Add(newCollectionNode);
                     };
-                    createCollectionWindow.Show();
+                    if (!createCollectionWindow.IsDisposed)
+                    {
+                        createCollectionWindow.CreateCollectionAction += createCollectionHandler;
+                        createCollectionWindow.Show();
+                    }
                 }
                 // Add Molecule/Accord to existing Accord
                 else
                 {
                     // open DefineAmount-Form
+                    Action<object?> materialAmountHandler = null;
                     var addMaterialAmountWindow = new FormDefineAmount(((Basis)compatible)._name);
-                    addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                    //addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                    materialAmountHandler = (newAmount) =>
                     {
+                        addMaterialAmountWindow.AddAmountAction -= materialAmountHandler;
                         if (newAmount == null)
                         {
                             if (_refStatusLabel != null) _refStatusLabel.Text = "Amount is required, abort adding new Element";
@@ -86,6 +96,7 @@ namespace PerfumeCreator
                         if (_refStatusLabel != null)
                             _refStatusLabel.Text = "New Component could not be merged to existing TreeNode";
                     };
+                    addMaterialAmountWindow.AddAmountAction += materialAmountHandler;
                     addMaterialAmountWindow.ShowDialog();
                 }
                 return true;
@@ -102,14 +113,31 @@ namespace PerfumeCreator
             List<TreeNode> ingredientTreeNodes = new List<TreeNode>();
             if (collection is Molecule || collection is Diluent) return null;
 
-            List<(IOnlyAccordCompatible, MaterialUnit)> ingredients = ((Accord)collection).GetIngredientsList();
-            foreach ((IOnlyAccordCompatible Frag, MaterialUnit Amount) in ingredients)
+            if (collection is Accord)
             {
-                ingredientTreeNodes.Add(ComponentAsTreeNode((Basis)Frag, Amount));
+                List<(IOnlyAccordCompatible, MaterialUnit)> ingredients = ((Accord)collection).GetIngredientsList();
+
+                foreach ((IOnlyAccordCompatible Frag, MaterialUnit Amount) in ingredients)
+                {
+                    ingredientTreeNodes.Add(ComponentAsTreeNode((Basis)Frag, Amount));
+                }
+                TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
+                newCollectionNode.Tag = collection;
+                return newCollectionNode;
             }
-            TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
-            newCollectionNode.Tag = collection;
-            return newCollectionNode;
+            else if (collection is Perfume)
+            {
+                List<(IAccordPerfumeCompatible, MaterialUnit)> ingredients = ((Perfume)collection).GetIngredientsList();
+
+                foreach ((IAccordPerfumeCompatible Frag, MaterialUnit Amount) in ingredients)
+                {
+                    ingredientTreeNodes.Add(ComponentAsTreeNode((Basis)Frag, Amount));
+                }
+                TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
+                newCollectionNode.Tag = collection;
+                return newCollectionNode;
+            }
+            return null;
         }
 
         private TreeNode? ComponentAsTreeNode(Basis component, MaterialUnit amount)

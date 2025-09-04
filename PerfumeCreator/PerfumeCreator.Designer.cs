@@ -46,11 +46,11 @@
             splitContainerL0 = new SplitContainer();
             tableLayoutMain = new TableLayoutPanel();
             butAddMolecule = new Button();
-            butAddAccord = new Button();
-            butAddPerfume = new Button();
             treeViewMolecule = new TreeView();
             treeViewAccord = new TreeView();
             treeViewPerfume = new TreeView();
+            labelPerfumeCreatorAccord = new Label();
+            labelPerfumeCreatorPefume = new Label();
             tableLayoutSide = new TableLayoutPanel();
             groupBoxDilutionCalc = new GroupBox();
             tableLayoutDilutionCalc = new TableLayoutPanel();
@@ -127,7 +127,7 @@
             // 
             generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem, accordTransitionSettingToolStripMenuItem });
             generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            generalSettingsToolStripMenuItem.Size = new Size(180, 22);
+            generalSettingsToolStripMenuItem.Size = new Size(159, 22);
             generalSettingsToolStripMenuItem.Text = "General Settings";
             // 
             // viewportMaterialUnitToolStripMenuItem
@@ -163,7 +163,7 @@
             // fullCopyToolStripMenuItem
             // 
             fullCopyToolStripMenuItem.Name = "fullCopyToolStripMenuItem";
-            fullCopyToolStripMenuItem.Size = new Size(180, 22);
+            fullCopyToolStripMenuItem.Size = new Size(122, 22);
             fullCopyToolStripMenuItem.Text = "Full copy";
             fullCopyToolStripMenuItem.Click += fullCopyToolStripMenuItem_Click;
             // 
@@ -172,7 +172,7 @@
             linkOnlyToolStripMenuItem.Checked = true;
             linkOnlyToolStripMenuItem.CheckState = CheckState.Checked;
             linkOnlyToolStripMenuItem.Name = "linkOnlyToolStripMenuItem";
-            linkOnlyToolStripMenuItem.Size = new Size(180, 22);
+            linkOnlyToolStripMenuItem.Size = new Size(122, 22);
             linkOnlyToolStripMenuItem.Text = "Link only";
             linkOnlyToolStripMenuItem.Click += linkOnlyToolStripMenuItem_Click;
             // 
@@ -216,11 +216,11 @@
             tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutMain.Controls.Add(butAddMolecule, 2, 0);
-            tableLayoutMain.Controls.Add(butAddAccord, 1, 0);
-            tableLayoutMain.Controls.Add(butAddPerfume, 0, 0);
             tableLayoutMain.Controls.Add(treeViewMolecule, 2, 1);
             tableLayoutMain.Controls.Add(treeViewAccord, 1, 1);
             tableLayoutMain.Controls.Add(treeViewPerfume, 0, 1);
+            tableLayoutMain.Controls.Add(labelPerfumeCreatorAccord, 1, 0);
+            tableLayoutMain.Controls.Add(labelPerfumeCreatorPefume, 0, 0);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
@@ -240,26 +240,6 @@
             butAddMolecule.Text = "Add Molecule";
             butAddMolecule.UseVisualStyleBackColor = true;
             butAddMolecule.Click += butAddMolecule_Click;
-            // 
-            // butAddAccord
-            // 
-            butAddAccord.Dock = DockStyle.Fill;
-            butAddAccord.Location = new Point(273, 3);
-            butAddAccord.Name = "butAddAccord";
-            butAddAccord.Size = new Size(264, 24);
-            butAddAccord.TabIndex = 1;
-            butAddAccord.Text = "New Accord";
-            butAddAccord.UseVisualStyleBackColor = true;
-            // 
-            // butAddPerfume
-            // 
-            butAddPerfume.Dock = DockStyle.Fill;
-            butAddPerfume.Location = new Point(3, 3);
-            butAddPerfume.Name = "butAddPerfume";
-            butAddPerfume.Size = new Size(264, 24);
-            butAddPerfume.TabIndex = 0;
-            butAddPerfume.Text = "New Perfume";
-            butAddPerfume.UseVisualStyleBackColor = true;
             // 
             // treeViewMolecule
             // 
@@ -293,6 +273,30 @@
             treeViewPerfume.TabIndex = 5;
             treeViewPerfume.DragDrop += treeViewPerfume_DragDrop;
             treeViewPerfume.DragEnter += treeViewPerfume_DragEnter;
+            // 
+            // labelPerfumeCreatorAccord
+            // 
+            labelPerfumeCreatorAccord.AutoSize = true;
+            labelPerfumeCreatorAccord.Dock = DockStyle.Fill;
+            labelPerfumeCreatorAccord.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelPerfumeCreatorAccord.Location = new Point(273, 0);
+            labelPerfumeCreatorAccord.Name = "labelPerfumeCreatorAccord";
+            labelPerfumeCreatorAccord.Size = new Size(264, 30);
+            labelPerfumeCreatorAccord.TabIndex = 6;
+            labelPerfumeCreatorAccord.Text = "Accords";
+            labelPerfumeCreatorAccord.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // labelPerfumeCreatorPefume
+            // 
+            labelPerfumeCreatorPefume.AutoSize = true;
+            labelPerfumeCreatorPefume.Dock = DockStyle.Fill;
+            labelPerfumeCreatorPefume.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelPerfumeCreatorPefume.Location = new Point(3, 0);
+            labelPerfumeCreatorPefume.Name = "labelPerfumeCreatorPefume";
+            labelPerfumeCreatorPefume.Size = new Size(264, 30);
+            labelPerfumeCreatorPefume.TabIndex = 7;
+            labelPerfumeCreatorPefume.Text = "Perfumes";
+            labelPerfumeCreatorPefume.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tableLayoutSide
             // 
@@ -466,6 +470,7 @@
             // comboBoxDilutionCalcMode
             // 
             comboBoxDilutionCalcMode.Dock = DockStyle.Top;
+            comboBoxDilutionCalcMode.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxDilutionCalcMode.FormattingEnabled = true;
             comboBoxDilutionCalcMode.Location = new Point(3, 21);
             comboBoxDilutionCalcMode.Name = "comboBoxDilutionCalcMode";
@@ -503,6 +508,7 @@
             ((System.ComponentModel.ISupportInitialize)splitContainerL0).EndInit();
             splitContainerL0.ResumeLayout(false);
             tableLayoutMain.ResumeLayout(false);
+            tableLayoutMain.PerformLayout();
             tableLayoutSide.ResumeLayout(false);
             groupBoxDilutionCalc.ResumeLayout(false);
             tableLayoutDilutionCalc.ResumeLayout(false);
@@ -529,8 +535,6 @@
         private SplitContainer splitContainer1;
         private TableLayoutPanel tableLayoutMain;
         private Button butAddMolecule;
-        private Button butAddAccord;
-        private Button butAddPerfume;
         private TableLayoutPanel tableLayoutSide;
         private GroupBox groupBoxDilutionCalc;
         private ComboBox comboBoxDilutionCalcMode;
@@ -558,5 +562,7 @@
         private ToolStripMenuItem accordTransitionSettingToolStripMenuItem;
         private ToolStripMenuItem fullCopyToolStripMenuItem;
         private ToolStripMenuItem linkOnlyToolStripMenuItem;
+        private Label labelPerfumeCreatorAccord;
+        private Label labelPerfumeCreatorPefume;
     }
 }

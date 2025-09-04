@@ -380,6 +380,7 @@
             Controls.Add(tableLayoutPanelMolCreator);
             Name = "FormCreateMolecule";
             Text = "Create Molecule";
+            FormClosing += FormCreateMolecule_FormClosing;
             tableLayoutPanelMolCreator.ResumeLayout(false);
             tableLayoutPanelMolCreator.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);

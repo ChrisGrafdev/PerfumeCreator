@@ -138,9 +138,12 @@ namespace PerfumeCreator
             else if (targetNode?.Parent != null && targetNode?.Tag is (Basis frag, MaterialUnit amount))
             {
                 // open DefineAmount-Form
+                Action<object?> materialAmountHandler = null;
                 var addMaterialAmountWindow = new FormDefineAmount(frag._name, amount);
-                addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                //addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                materialAmountHandler = (newAmount) =>
                 {
+                    addMaterialAmountWindow.AddAmountAction -= materialAmountHandler;
                     if (newAmount == null)
                     {
                         toolStripStatusLabelMain.Text = "Amount is required, abort adding new Element";
@@ -150,6 +153,7 @@ namespace PerfumeCreator
                     targetNode.Tag = (accordCompatible, (MaterialUnit)newAmount);
                     targetNode.Text = frag._name + " : " + ((MaterialUnit)newAmount).GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                 };
+                addMaterialAmountWindow.AddAmountAction += materialAmountHandler;
                 addMaterialAmountWindow.ShowDialog();
             }
             else
@@ -254,7 +258,7 @@ namespace PerfumeCreator
             TreeNode node = (TreeNode)item;
             if (node.Tag is Accord && node.Parent == null) // get root-layer Accord
             {
-                DoDragDrop(node, DragDropEffects.Link);
+                DoDragDrop(node, (Globals.CopyOrLinkSetting == CopyOrLink.Link) ? DragDropEffects.Link : DragDropEffects.Copy);
                 toolStripStatusLabelMain.Text = "Drag item: " + node.ToString();
             }
             else

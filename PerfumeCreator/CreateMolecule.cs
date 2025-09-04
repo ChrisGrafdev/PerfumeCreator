@@ -43,7 +43,8 @@ namespace PerfumeCreator
         {
             if (!checkData())
             {
-                CreateMoleculeAction?.Invoke(null);
+                // CreateMoleculeAction?.Invoke(null);
+                return;
             }
 
             Molecule molecule = new Molecule(
@@ -55,12 +56,12 @@ namespace PerfumeCreator
                 _scentCategory,
                 _noteLevel,
                 _manufacturer);
-            
-            if (textBoxMolCreateDescription.Text.Length > 0 )
+
+            if (textBoxMolCreateDescription.Text.Length > 0)
                 molecule._description = textBoxMolCreateDescription.Text;
             if (textBoxMolCreateComment.Text.Length > 0)
                 molecule._comment = textBoxMolCreateComment.Text;
-            if (textBoxMolCreateScents.Text.Length > 0 )
+            if (textBoxMolCreateScents.Text.Length > 0)
                 molecule._scents = textBoxMolCreateScents.Text.Split(',').ToList();
 
             CreateMoleculeAction?.Invoke(molecule);
@@ -70,27 +71,46 @@ namespace PerfumeCreator
 
         private bool checkData()
         {
+            // mark all required fields in red
             _name = textBoxMolCreateName.Text;
-            if (_name == "") return false;
-            /*
-             * TDB: check if name already exists
-             */
+            if (_name == "")
+            {
+                /*
+                 * TDB: check if name already exists
+                 */
+                textBoxMolCreateName.BackColor = Color.OrangeRed;
+                return false;
+            }
             if (!(float.TryParse(textBoxMolCreateFragranceDilution.Text, out _concentration)))
+            {
+                textBoxMolCreateFragranceDilution.BackColor = Color.OrangeRed;
                 return false; // has to be more detailed...
+            }
             _dilutionType = (DilutionType)comboBoxMolCreateDilutionType.SelectedItem;
             if (!(float.TryParse(textBoxMolCreateFullAmount.Text, out _unitAmount)))
+            {
+                textBoxMolCreateFullAmount.BackColor = Color.OrangeRed;
                 return false;
+            }
             _materialUnit = new MaterialUnit(UnitType.Milligram, _unitAmount * 1000.0f);
             _scentCategory = (ScentCategory)comboBoxMolCreateCategory.SelectedItem;
             if (!(float.TryParse(textBoxMolCreateTotalPrice.Text, out _fullPrice)))
+            {
+                textBoxMolCreateTotalPrice.BackColor = Color.OrangeRed;
                 return false;
+            }
             _noteLevel = (NoteLevel)comboBoxMolCreateNoteLevel.SelectedItem;
-            
+
             if (textBoxMolCreateManufacturer.Text.Length > 0)
                 _manufacturer = textBoxMolCreateManufacturer.Text;
             else
                 _manufacturer = "unknown";
             return true;
+        }
+
+        private void FormCreateMolecule_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CreateMoleculeAction?.Invoke(null);
         }
     }
 }

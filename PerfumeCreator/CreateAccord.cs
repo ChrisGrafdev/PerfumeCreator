@@ -12,7 +12,7 @@ namespace PerfumeCreator
 {
     public partial class FormCreateCollection : Form
     {
-        public event Action<Accord> CreateAccordAction;
+        public event Action<ICollectionReturn> CreateCollectionAction;
         private FormComponentUseCase _formComponentUseCase;
         private Basis _base;
         private MaterialUnit _materialUnit;
@@ -50,21 +50,29 @@ namespace PerfumeCreator
 
             // open MaterialAmount-Form
             string fragranceName = compatibleBase._name;
-            
+
+            Action<object?> materialAmountHandler = null;
             var addMaterialAmountWindow = new FormDefineAmount(fragranceName);
-            addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+            //addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+            materialAmountHandler = (newAmount) =>
             {
+                addMaterialAmountWindow.AddAmountAction -= materialAmountHandler;
                 if (newAmount == null) // AddAmount canceled
                 {
-                    CreateAccordAction?.Invoke(null);
+                    CreateCollectionAction?.Invoke(null);
                     this.Close();
+                    return;
                 }
                 _materialUnit = (MaterialUnit)newAmount;
             };
-            addMaterialAmountWindow.ShowDialog();
+            if (!addMaterialAmountWindow.IsDisposed)
+            {
+                addMaterialAmountWindow.AddAmountAction += materialAmountHandler;
+                addMaterialAmountWindow.ShowDialog();
+            }
         }
 
-        
+
         private void buttonAccCreateSave_Click(object sender, EventArgs e)
         {
             if (!checkData()) return;
@@ -72,13 +80,14 @@ namespace PerfumeCreator
             if (_formComponentUseCase == FormComponentUseCase.Accord)
             {
                 Accord accord = new Accord(_name, (IOnlyAccordCompatible)_base, _materialUnit); //_scentCategory, _noteLevel, _comment);
-                CreateAccordAction?.Invoke(accord);
+                CreateCollectionAction?.Invoke(accord);
             }
             else
             {
                 Perfume perfume = new Perfume(_name, (IAccordPerfumeCompatible)_base, _materialUnit);
+                CreateCollectionAction?.Invoke(perfume);
             }
-
+            CreateCollectionAction?.Invoke(null);
             this.Close();
         }
 
@@ -98,7 +107,13 @@ namespace PerfumeCreator
 
         private void buttonAccCreateCancel_Click(object sender, EventArgs e)
         {
+            CreateCollectionAction?.Invoke(null);
             this.Close();
+        }
+
+        private void FormCreateCollection_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CreateCollectionAction?.Invoke(null);
         }
     }
 }

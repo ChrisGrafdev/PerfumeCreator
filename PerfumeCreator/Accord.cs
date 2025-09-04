@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible
+    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionReturn
     {
         // interface definition
         public float Concentration => _concentration;
