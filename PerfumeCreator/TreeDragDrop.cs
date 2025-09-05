@@ -48,7 +48,7 @@ namespace PerfumeCreator
                             if (_refStatusLabel != null) _refStatusLabel.Text = "Abort creation of new accord";
                             return;
                         }
-                        TreeNode newCollectionNode = CollectionAsTreeNode((Basis)newCollection);
+                        TreeNode newCollectionNode = CollectionAsTreeNode((Basis)newCollection, ((Basis)newCollection)._fullAmount, true);
                         _refTreeView.Nodes.Add(newCollectionNode);
                     };
                     if (!createCollectionWindow.IsDisposed)
@@ -83,13 +83,13 @@ namespace PerfumeCreator
                             // add component to accord mixture
                             existingAccord.AddComponentToAccord(accordComp, materialAmount);
                             // update TreeView
-                            targetNode.Nodes.Add(ComponentAsTreeNode((Basis)accordComp, materialAmount));
+                            targetNode.Nodes.Add(CollectionAsTreeNode((Basis)accordComp, materialAmount));//ComponentAsTreeNode((Basis)accordComp, materialAmount));
                             return;
                         }
                         else if (targetNode?.Tag is Perfume existingPerfume && compatible is IAccordPerfumeCompatible perfumeComp)
                         {
                             existingPerfume.AddComponentToPerfume(perfumeComp, materialAmount);
-                            targetNode.Nodes.Add(ComponentAsTreeNode((Basis)perfumeComp, materialAmount));
+                            targetNode.Nodes.Add(CollectionAsTreeNode((Basis)perfumeComp, materialAmount));//ComponentAsTreeNode((Basis)perfumeComp, materialAmount));
                             return;
                         }
                         // should not reach this point -> possible error
@@ -108,10 +108,22 @@ namespace PerfumeCreator
             return false;
         }
 
-        private TreeNode? CollectionAsTreeNode(Basis collection)
+        private TreeNode? CollectionAsTreeNode(Basis collection, MaterialUnit collectionAmount, bool rootNode = false)
         {
             List<TreeNode> ingredientTreeNodes = new List<TreeNode>();
-            if (collection is Molecule || collection is Diluent) return null;
+            if (collection is Molecule || collection is Diluent) // end of recursive call
+            {
+                //return null;
+                TreeNode singleTreeNode = ComponentAsTreeNode((Basis)collection, collectionAmount);
+                if (singleTreeNode != null)
+                {
+                    return singleTreeNode;
+                    //TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
+                    //newCollectionNode.Tag = collection;
+                    //return newCollectionNode;
+                }
+                return null;
+            }
 
             if (collection is Accord)
             {
@@ -119,9 +131,16 @@ namespace PerfumeCreator
 
                 foreach ((IOnlyAccordCompatible Frag, MaterialUnit Amount) in ingredients)
                 {
-                    ingredientTreeNodes.Add(ComponentAsTreeNode((Basis)Frag, Amount));
+                    ingredientTreeNodes.Add(CollectionAsTreeNode((Basis)Frag, Amount)); // recursive call
                 }
-                TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
+                TreeNode newCollectionNode;
+                if (rootNode)
+                    newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
+                else
+                {
+                    string amountString = collection._fullAmount.GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
+                    newCollectionNode = new TreeNode(collection._name + " : " + amountString, ingredientTreeNodes.ToArray());
+                }
                 newCollectionNode.Tag = collection;
                 return newCollectionNode;
             }
@@ -131,7 +150,7 @@ namespace PerfumeCreator
 
                 foreach ((IAccordPerfumeCompatible Frag, MaterialUnit Amount) in ingredients)
                 {
-                    ingredientTreeNodes.Add(ComponentAsTreeNode((Basis)Frag, Amount));
+                    ingredientTreeNodes.Add(CollectionAsTreeNode((Basis)Frag, Amount)); // recursive call
                 }
                 TreeNode newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
                 newCollectionNode.Tag = collection;
@@ -152,6 +171,27 @@ namespace PerfumeCreator
 
             TreeNode moleculeNode = new TreeNode(component._name + " : " + amountString);
             moleculeNode.Tag = (component, amount);
+
+            //if (component is Accord acc)
+            //{
+            //    List<(IOnlyAccordCompatible, MaterialUnit)> ingreds = acc.GetIngredientsList();
+            //    List<TreeNode> subNodes = new List<TreeNode>();
+
+            //    if (ingreds?.Count() == 0 || ingreds == null)
+            //    {
+            //        subNodes.Add(moleculeNode);
+            //        return subNodes.ToArray(); // end recursive call
+            //    }
+                
+            //    foreach((IOnlyAccordCompatible comp, MaterialUnit mat) in ingreds)
+            //    {
+            //        subNodes.Add(ComponentAsTreeNode((Basis)comp, mat)[0]); // recursive call
+            //    }
+            //}
+            //else if (component is Perfume perf)
+            //{
+
+            //}
             return moleculeNode;
         }
     }

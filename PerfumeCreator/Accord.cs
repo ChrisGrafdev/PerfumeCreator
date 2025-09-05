@@ -38,7 +38,7 @@ namespace PerfumeCreator
             string? comment = null)
             : base(
                   name,
-                  baseComponent.FullAmount,
+                  baseMaterialAmount, //baseComponent.FullAmount,
                   baseComponent.Concentration,
                   baseComponent.TotalPrice,
                   baseComponent.DilutionType,
@@ -58,11 +58,11 @@ namespace PerfumeCreator
         /// <param name="newComponentAmount"></param>
         public void AddComponentToAccord(IOnlyAccordCompatible newComponent, MaterialUnit newComponentAmount)
         {
-            if (_ingredientsList.Count == 0) // first element
+            _ingredientsList.Add((newComponent, newComponentAmount));
+            if (_ingredientsList.Count == 1) // first element
             {
                 // Accord member variables could be ignored due to handling them automatically when calling the constructor
                 // only adding the first component to the list
-                _ingredientsList.Add((newComponent, newComponentAmount));
                 return;
             }
             // convert current Accord properties to transferring structure

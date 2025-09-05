@@ -42,11 +42,11 @@ namespace PerfumeCreator
         /// <param name="newComponentAmount"></param>
         public void AddComponentToPerfume(IAccordPerfumeCompatible newComponent, MaterialUnit newComponentAmount)
         {
-            if (_ingredientsList.Count == 0) // first element
+            _ingredientsList.Add((newComponent, newComponentAmount));
+            if (_ingredientsList.Count == 1) // first element
             {
                 // Perfume member variables could be ignored due to handling them automatically when calling the constructor
                 // only adding the first component to the list
-                _ingredientsList.Add((newComponent, newComponentAmount));
                 return;
             }
             // convert current Perfume properties to transferring structure

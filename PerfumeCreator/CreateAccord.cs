@@ -37,7 +37,6 @@ namespace PerfumeCreator
                 comboBoxAccCreateCategory.Enabled = false;
                 comboBoxAccCreateNoteLevel.Enabled = false;
             }
-
         }
 
         public FormCreateCollection(FormComponentUseCase useCase, Basis compatibleBase)
@@ -64,6 +63,7 @@ namespace PerfumeCreator
                     return;
                 }
                 _materialUnit = (MaterialUnit)newAmount;
+                //compatibleBase._fullAmount = _materialUnit
             };
             if (!addMaterialAmountWindow.IsDisposed)
             {
