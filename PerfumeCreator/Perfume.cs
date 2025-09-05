@@ -25,7 +25,7 @@ namespace PerfumeCreator
             string? comment = null)
             : base(
                   name,
-                  baseComponent.FullAmount,
+                  baseMaterialAmount, //baseComponent.FullAmount,
                   baseComponent.Concentration,
                   baseComponent.TotalPrice,
                   baseComponent.DilutionType,

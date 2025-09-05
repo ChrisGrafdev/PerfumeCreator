@@ -138,7 +138,7 @@ namespace PerfumeCreator
                     newCollectionNode = new TreeNode(collection._name, ingredientTreeNodes.ToArray());
                 else
                 {
-                    string amountString = collection._fullAmount.GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
+                    string amountString = collectionAmount.GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                     newCollectionNode = new TreeNode(collection._name + " : " + amountString, ingredientTreeNodes.ToArray());
                 }
                 newCollectionNode.Tag = collection;
