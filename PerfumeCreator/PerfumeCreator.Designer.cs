@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPerfumeCreator));
             mainMenuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
@@ -118,6 +119,7 @@
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             exportToolStripMenuItem.Size = new Size(107, 22);
             exportToolStripMenuItem.Text = "Export";
+            exportToolStripMenuItem.Click += exportToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
@@ -130,7 +132,7 @@
             // 
             generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem, accordTransitionSettingToolStripMenuItem });
             generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            generalSettingsToolStripMenuItem.Size = new Size(159, 22);
+            generalSettingsToolStripMenuItem.Size = new Size(180, 22);
             generalSettingsToolStripMenuItem.Text = "General Settings";
             // 
             // viewportMaterialUnitToolStripMenuItem
@@ -523,6 +525,7 @@
             Controls.Add(splitContainerL0);
             Controls.Add(mainStatusStrip);
             Controls.Add(mainMenuStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = mainMenuStrip;
             Margin = new Padding(3, 2, 3, 2);
             Name = "FormPerfumeCreator";

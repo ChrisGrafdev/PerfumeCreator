@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateMolecule));
             tableLayoutPanelMolCreator = new TableLayoutPanel();
             textBoxMolCreateManufacturer = new TextBox();
             labelMolCreateManufacturer = new Label();
@@ -378,6 +379,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(441, 491);
             Controls.Add(tableLayoutPanelMolCreator);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormCreateMolecule";
             Text = "Create Molecule";
             FormClosing += FormCreateMolecule_FormClosing;

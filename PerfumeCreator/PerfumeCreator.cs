@@ -182,6 +182,11 @@ namespace PerfumeCreator
 
         private void buttonExportPerfume_Click(object sender, EventArgs e)
         {
+            ExportLogic();
+        }
+
+        private void ExportLogic()
+        {
             TreeNode selectedNode = treeViewPerfume.SelectedNode;
             if (selectedNode == null)
             {
@@ -203,53 +208,6 @@ namespace PerfumeCreator
             else
                 throw new ArgumentException("Selected Perfume-node does not contain a Perfume object");
         }
-
-        /*private TreeNode AccordAsTreeNode(Accord accord)
-        {
-            List<(IAccordCompatible Frag, MaterialUnit Amount)> ingredients = accord.getIngredients();
-            List<TreeNode> ingredientTreeNodes = new List<TreeNode>();
-            foreach ((IAccordCompatible Frag, MaterialUnit Amount) in ingredients)
-            {
-                ingredientTreeNodes.Add(AddComponentToAccord(Frag, Amount));
-            }
-            TreeNode newAccordNode = new TreeNode(accord._name, ingredientTreeNodes.ToArray());
-            newAccordNode.Tag = accord;
-            return newAccordNode;
-        }*/
-        /*private TreeNode AddComponentToAccord(IAccordCompatible accordComponent, MaterialUnit amount)
-        {
-            if (accordComponent == null || amount == null)
-            {
-                toolStripStatusLabelMain.Text = "Fragrance or Amount is not set";
-                return null;
-            }
-
-            if (accordComponent is Fragrance fragrance)
-            {
-                string amountString = amount.GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
-                //if (Globals.ViewportMaterialUnit == UnitType.Drops)
-                //    amountString = amount.GetDropAmount().ToString() + " drops";
-                //else
-                //    amountString = amount.GetMilligramAmount().ToString() + " mg";
-                TreeNode moleculeNode = new TreeNode(fragrance._name + " : " + amountString);
-                moleculeNode.Tag = (accordComponent, amount);
-                return moleculeNode;
-            }
-            /*else if (accordComponent is Accord subAccord)
-            {
-                string amountString;
-                if (Globals.ViewportMaterialUnit == UnitType.Drops)
-                    amountString = amount.GetDropAmount().ToString() + " drops";
-                else
-                    amountString = amount.GetMilligramAmount().ToString() + " mg";
-                TreeNode accordNode = new TreeNode(subAccord._name + " : " + amountString);
-                accordNode.Tag = (subAccord, amount);
-                return accordNode;
-            }
-            // Error -> should not accure due to previous checks
-            toolStripStatusLabelMain.Text = "Error while converting Molecules/Accords to Nodes";
-            return null;
-        }*/
 
         //#########################
         // Drap&Drop functionality
@@ -453,5 +411,9 @@ namespace PerfumeCreator
             fullCopyToolStripMenuItem.Checked = false;
         }
 
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportLogic();
+        }
     }
 }

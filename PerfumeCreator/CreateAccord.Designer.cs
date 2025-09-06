@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCreateCollection));
             tableLayoutAccCreate = new TableLayoutPanel();
             textBoxAccCreateComment = new TextBox();
             labelAccCreateComment = new Label();
@@ -200,6 +201,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(397, 209);
             Controls.Add(tableLayoutAccCreate);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormCreateCollection";
             Text = "Create";
             FormClosing += FormCreateCollection_FormClosing;

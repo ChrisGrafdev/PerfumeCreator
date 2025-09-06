@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDefineAmount));
             tableLayoutPanelAddAmount = new TableLayoutPanel();
             groupBoxFragrance = new GroupBox();
             labelAddAmountFragrance = new Label();
@@ -160,6 +161,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(302, 126);
             Controls.Add(tableLayoutPanelAddAmount);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(318, 165);
             MinimumSize = new Size(318, 165);
             Name = "FormDefineAmount";
