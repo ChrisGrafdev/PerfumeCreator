@@ -180,6 +180,30 @@ namespace PerfumeCreator
             return categoryNode;
         }
 
+        private void buttonExportPerfume_Click(object sender, EventArgs e)
+        {
+            TreeNode selectedNode = treeViewPerfume.SelectedNode;
+            if (selectedNode == null)
+            {
+                toolStripStatusLabelMain.Text = "No Perfume selected!";
+                return;
+            }
+            while (selectedNode.Parent != null)
+            {
+                selectedNode = selectedNode.Parent;
+            }
+            if (selectedNode.Tag is Perfume perf)
+            {
+                bool exportResult = PerfumeExporter.ExportCollection(perf);
+                if (exportResult)
+                    toolStripStatusLabelMain.Text = "Perfume export successfull";
+                else
+                    toolStripStatusLabelMain.Text = "Error during Perfume export";
+            }
+            else
+                throw new ArgumentException("Selected Perfume-node does not contain a Perfume object");
+        }
+
         /*private TreeNode AccordAsTreeNode(Accord accord)
         {
             List<(IAccordCompatible Frag, MaterialUnit Amount)> ingredients = accord.getIngredients();
@@ -428,5 +452,6 @@ namespace PerfumeCreator
             linkOnlyToolStripMenuItem.Checked = true;
             fullCopyToolStripMenuItem.Checked = false;
         }
+
     }
 }

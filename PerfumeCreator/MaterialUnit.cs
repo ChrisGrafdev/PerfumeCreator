@@ -20,6 +20,9 @@ namespace PerfumeCreator
             return _amountMilligram;
         }
 
+        public string AllToString()
+        { return $"{this.GetDropAmount()} drops  ~  {this.GetMilligramAmount()} mg"; }
+
         public float GetDropAmount()
         { return _amountDrops; }
 

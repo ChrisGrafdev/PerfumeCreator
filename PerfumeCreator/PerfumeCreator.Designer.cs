@@ -48,9 +48,11 @@
             butAddMolecule = new Button();
             treeViewMolecule = new TreeView();
             treeViewAccord = new TreeView();
-            treeViewPerfume = new TreeView();
             labelPerfumeCreatorAccord = new Label();
             labelPerfumeCreatorPefume = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            treeViewPerfume = new TreeView();
+            buttonExportPerfume = new Button();
             tableLayoutSide = new TableLayoutPanel();
             groupBoxDilutionCalc = new GroupBox();
             tableLayoutDilutionCalc = new TableLayoutPanel();
@@ -73,6 +75,7 @@
             splitContainerL0.Panel2.SuspendLayout();
             splitContainerL0.SuspendLayout();
             tableLayoutMain.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             tableLayoutSide.SuspendLayout();
             groupBoxDilutionCalc.SuspendLayout();
             tableLayoutDilutionCalc.SuspendLayout();
@@ -218,9 +221,9 @@
             tableLayoutMain.Controls.Add(butAddMolecule, 2, 0);
             tableLayoutMain.Controls.Add(treeViewMolecule, 2, 1);
             tableLayoutMain.Controls.Add(treeViewAccord, 1, 1);
-            tableLayoutMain.Controls.Add(treeViewPerfume, 0, 1);
             tableLayoutMain.Controls.Add(labelPerfumeCreatorAccord, 1, 0);
             tableLayoutMain.Controls.Add(labelPerfumeCreatorPefume, 0, 0);
+            tableLayoutMain.Controls.Add(tableLayoutPanel1, 0, 1);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
@@ -263,17 +266,6 @@
             treeViewAccord.DragDrop += treeViewAccord_DragDrop;
             treeViewAccord.DragEnter += treeViewAccord_DragEnter;
             // 
-            // treeViewPerfume
-            // 
-            treeViewPerfume.AllowDrop = true;
-            treeViewPerfume.Dock = DockStyle.Fill;
-            treeViewPerfume.Location = new Point(3, 33);
-            treeViewPerfume.Name = "treeViewPerfume";
-            treeViewPerfume.Size = new Size(264, 599);
-            treeViewPerfume.TabIndex = 5;
-            treeViewPerfume.DragDrop += treeViewPerfume_DragDrop;
-            treeViewPerfume.DragEnter += treeViewPerfume_DragEnter;
-            // 
             // labelPerfumeCreatorAccord
             // 
             labelPerfumeCreatorAccord.AutoSize = true;
@@ -297,6 +289,43 @@
             labelPerfumeCreatorPefume.TabIndex = 7;
             labelPerfumeCreatorPefume.Text = "Perfumes";
             labelPerfumeCreatorPefume.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(treeViewPerfume, 0, 1);
+            tableLayoutPanel1.Controls.Add(buttonExportPerfume, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 33);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(264, 599);
+            tableLayoutPanel1.TabIndex = 8;
+            // 
+            // treeViewPerfume
+            // 
+            treeViewPerfume.AllowDrop = true;
+            treeViewPerfume.Dock = DockStyle.Fill;
+            treeViewPerfume.Location = new Point(3, 33);
+            treeViewPerfume.Name = "treeViewPerfume";
+            treeViewPerfume.Size = new Size(258, 563);
+            treeViewPerfume.TabIndex = 6;
+            treeViewPerfume.DragDrop += treeViewPerfume_DragDrop;
+            treeViewPerfume.DragEnter += treeViewPerfume_DragEnter;
+            // 
+            // buttonExportPerfume
+            // 
+            buttonExportPerfume.Dock = DockStyle.Fill;
+            buttonExportPerfume.Location = new Point(3, 3);
+            buttonExportPerfume.Name = "buttonExportPerfume";
+            buttonExportPerfume.Size = new Size(258, 24);
+            buttonExportPerfume.TabIndex = 7;
+            buttonExportPerfume.Text = "Export Perfume";
+            buttonExportPerfume.UseVisualStyleBackColor = true;
+            buttonExportPerfume.Click += buttonExportPerfume_Click;
             // 
             // tableLayoutSide
             // 
@@ -509,6 +538,7 @@
             splitContainerL0.ResumeLayout(false);
             tableLayoutMain.ResumeLayout(false);
             tableLayoutMain.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
             tableLayoutSide.ResumeLayout(false);
             groupBoxDilutionCalc.ResumeLayout(false);
             tableLayoutDilutionCalc.ResumeLayout(false);
@@ -558,11 +588,13 @@
         private ToolStripMenuItem viewportMaterialUnitToolStripMenuItem;
         private ToolStripMenuItem dropsToolStripMenuItem;
         private ToolStripMenuItem milligramToolStripMenuItem;
-        private TreeView treeViewPerfume;
         private ToolStripMenuItem accordTransitionSettingToolStripMenuItem;
         private ToolStripMenuItem fullCopyToolStripMenuItem;
         private ToolStripMenuItem linkOnlyToolStripMenuItem;
         private Label labelPerfumeCreatorAccord;
         private Label labelPerfumeCreatorPefume;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TreeView treeViewPerfume;
+        private Button buttonExportPerfume;
     }
 }
