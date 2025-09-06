@@ -164,6 +164,7 @@
             MinimumSize = new Size(318, 165);
             Name = "FormDefineAmount";
             Text = "Define Amount";
+            FormClosing += FormDefineAmount_FormClosing;
             tableLayoutPanelAddAmount.ResumeLayout(false);
             groupBoxFragrance.ResumeLayout(false);
             groupBoxFragrance.PerformLayout();

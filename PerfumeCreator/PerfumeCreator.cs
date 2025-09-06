@@ -5,7 +5,10 @@ namespace PerfumeCreator
         //#####################################
         // Initial window/application settings
         //#####################################
-        private double mainSplitterRatio = 0.75;
+        private double _mainSplitterRatio = 0.75;
+        private TreeDragDrop _accordTreeViewDDLogic;
+        private TreeDragDrop _perfumeTreeViewDDLogic;
+
         public FormPerfumeCreator()
         {
             InitializeComponent();
@@ -14,6 +17,9 @@ namespace PerfumeCreator
 
             comboBoxDilutionCalcMode.DataSource = Enum.GetValues(typeof(DilutionTarget));
             comboBoxDilutionCalcInputUnit.DataSource = Enum.GetValues(typeof(UnitType));
+
+            _accordTreeViewDDLogic = new TreeDragDrop(FormComponentUseCase.Accord, treeViewAccord, toolStripStatusLabelMain);
+            _perfumeTreeViewDDLogic = new TreeDragDrop(FormComponentUseCase.Perfume, treeViewPerfume, toolStripStatusLabelMain);
         }
 
         //#######################
@@ -21,12 +27,12 @@ namespace PerfumeCreator
         //#######################
         private void PerfumeCreator_Resize(object? sender, EventArgs e) // not working?
         {
-            splitContainerL0.SplitterDistance = (int)(splitContainerL0.Width * mainSplitterRatio);
+            splitContainerL0.SplitterDistance = (int)(splitContainerL0.Width * _mainSplitterRatio);
         }
 
         private void SplitContainerL0_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            mainSplitterRatio = (double)splitContainerL0.SplitterDistance / splitContainerL0.Width;
+            _mainSplitterRatio = (double)splitContainerL0.SplitterDistance / splitContainerL0.Width;
         }
 
 
@@ -129,21 +135,25 @@ namespace PerfumeCreator
                 // Open CreateAccord Window based on current Settings...
                 toolStripStatusLabelMain.Text = "Not implemented yet";
             }
-            else if (targetNode?.Parent != null && targetNode?.Tag is (Fragrance frag, MaterialUnit amount))
+            else if (targetNode?.Parent != null && targetNode?.Tag is (Basis frag, MaterialUnit amount))
             {
                 // open DefineAmount-Form
+                Action<object?> materialAmountHandler = null;
                 var addMaterialAmountWindow = new FormDefineAmount(frag._name, amount);
-                addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                //addMaterialAmountWindow.AddAmountAction += (newAmount) =>
+                materialAmountHandler = (newAmount) =>
                 {
+                    addMaterialAmountWindow.AddAmountAction -= materialAmountHandler;
                     if (newAmount == null)
                     {
                         toolStripStatusLabelMain.Text = "Amount is required, abort adding new Element";
                         return;
                     }
-                    var (accordCompatible, _) = ((IAccordCompatible, MaterialUnit))targetNode.Tag;
+                    var (accordCompatible, _) = ((IOnlyAccordCompatible, MaterialUnit))targetNode.Tag;
                     targetNode.Tag = (accordCompatible, (MaterialUnit)newAmount);
                     targetNode.Text = frag._name + " : " + ((MaterialUnit)newAmount).GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                 };
+                addMaterialAmountWindow.AddAmountAction += materialAmountHandler;
                 addMaterialAmountWindow.ShowDialog();
             }
             else
@@ -159,7 +169,7 @@ namespace PerfumeCreator
         {
             TreeNode[] propertyNodes = {
                 new TreeNode("Note level: " + molecule._noteLevel.ToString()),
-                new TreeNode("Concentration: " + molecule._fragranceConcentration.ToString()),
+                new TreeNode("Concentration: " + molecule._concentration.ToString()),
                 new TreeNode("Dilution type: " + molecule._dilutionType.ToString()),
                 new TreeNode("Manufacturer: " + molecule._manufacturer.ToString())
             };
@@ -170,7 +180,31 @@ namespace PerfumeCreator
             return categoryNode;
         }
 
-        private TreeNode AccordAsTreeNode(Accord accord)
+        private void buttonExportPerfume_Click(object sender, EventArgs e)
+        {
+            TreeNode selectedNode = treeViewPerfume.SelectedNode;
+            if (selectedNode == null)
+            {
+                toolStripStatusLabelMain.Text = "No Perfume selected!";
+                return;
+            }
+            while (selectedNode.Parent != null)
+            {
+                selectedNode = selectedNode.Parent;
+            }
+            if (selectedNode.Tag is Perfume perf)
+            {
+                bool exportResult = PerfumeExporter.ExportCollection(perf);
+                if (exportResult)
+                    toolStripStatusLabelMain.Text = "Perfume export successfull";
+                else
+                    toolStripStatusLabelMain.Text = "Error during Perfume export";
+            }
+            else
+                throw new ArgumentException("Selected Perfume-node does not contain a Perfume object");
+        }
+
+        /*private TreeNode AccordAsTreeNode(Accord accord)
         {
             List<(IAccordCompatible Frag, MaterialUnit Amount)> ingredients = accord.getIngredients();
             List<TreeNode> ingredientTreeNodes = new List<TreeNode>();
@@ -181,8 +215,8 @@ namespace PerfumeCreator
             TreeNode newAccordNode = new TreeNode(accord._name, ingredientTreeNodes.ToArray());
             newAccordNode.Tag = accord;
             return newAccordNode;
-        }
-        private TreeNode AddComponentToAccord(IAccordCompatible accordComponent, MaterialUnit amount)
+        }*/
+        /*private TreeNode AddComponentToAccord(IAccordCompatible accordComponent, MaterialUnit amount)
         {
             if (accordComponent == null || amount == null)
             {
@@ -211,16 +245,17 @@ namespace PerfumeCreator
                 TreeNode accordNode = new TreeNode(subAccord._name + " : " + amountString);
                 accordNode.Tag = (subAccord, amount);
                 return accordNode;
-            }*/
+            }
             // Error -> should not accure due to previous checks
             toolStripStatusLabelMain.Text = "Error while converting Molecules/Accords to Nodes";
             return null;
-        }
+        }*/
 
         //#########################
         // Drap&Drop functionality
         //#########################
 
+        // Molecule func.
         private void treeViewMolecule_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var item = e.Item;
@@ -238,10 +273,31 @@ namespace PerfumeCreator
             }
         }
 
+        // Accord func.
+        private void treeViewAccord_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var item = e.Item;
+            if (item == null) return;
+
+            TreeNode node = (TreeNode)item;
+            if (node.Tag is Accord && node.Parent == null) // get root-layer Accord
+            {
+                DoDragDrop(node, (Globals.CopyOrLinkSetting == CopyOrLink.Link) ? DragDropEffects.Link : DragDropEffects.Copy);
+                toolStripStatusLabelMain.Text = "Drag item: " + node.ToString();
+            }
+            else
+            {
+                toolStripStatusLabelMain.Text = "Item not dragable!";
+            }
+        }
+
         private void treeViewAccord_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
+                TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                if (draggedNode?.Tag is Accord && Globals.CopyOrLinkSetting == CopyOrLink.Link)
+                    e.Effect = DragDropEffects.Link;
                 e.Effect = DragDropEffects.Copy;
             }
             else
@@ -257,7 +313,9 @@ namespace PerfumeCreator
                 return;
 
             TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-            if (draggedNode?.Tag is IAccordCompatible accordCompatible)
+            _accordTreeViewDDLogic.ExecuteTreeNodeDragDrop(draggedNode, e);
+
+            /*if (draggedNode?.Tag is IAccordCompatible accordCompatible)
             {
                 // Get target location
                 Point targetPoint = treeViewAccord.PointToClient(new Point(e.X, e.Y));
@@ -324,14 +382,40 @@ namespace PerfumeCreator
                         }
                     };
                     addMaterialAmountWindow.ShowDialog();
-                    //addMaterialAmountWindow.Show();
                 }
             }
             else
             {
                 toolStripStatusLabelMain.Text = "Object is not IAccordCompatible! - aborting";
                 return;
+            }*/
+        }
+
+        // Perfume func
+        private void treeViewPerfume_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                if (draggedNode?.Tag is Accord && Globals.CopyOrLinkSetting == CopyOrLink.Link)
+                    e.Effect = DragDropEffects.Link;
+                else
+                    e.Effect = DragDropEffects.Copy;
             }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void treeViewPerfume_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e == null) return;
+            if (!e.Data.GetDataPresent(typeof(TreeNode)))
+                return;
+
+            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            _perfumeTreeViewDDLogic.ExecuteTreeNodeDragDrop(draggedNode, e);
         }
 
 
@@ -355,6 +439,19 @@ namespace PerfumeCreator
             dropsToolStripMenuItem.Checked = false;
         }
 
-        
+        private void fullCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.CopyOrLinkSetting = CopyOrLink.Copy;
+            fullCopyToolStripMenuItem.Checked = true;
+            linkOnlyToolStripMenuItem.Checked = false;
+        }
+
+        private void linkOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Globals.CopyOrLinkSetting = CopyOrLink.Link;
+            linkOnlyToolStripMenuItem.Checked = true;
+            fullCopyToolStripMenuItem.Checked = false;
+        }
+
     }
 }

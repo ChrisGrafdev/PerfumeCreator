@@ -38,15 +38,21 @@
             viewportMaterialUnitToolStripMenuItem = new ToolStripMenuItem();
             dropsToolStripMenuItem = new ToolStripMenuItem();
             milligramToolStripMenuItem = new ToolStripMenuItem();
+            accordTransitionSettingToolStripMenuItem = new ToolStripMenuItem();
+            fullCopyToolStripMenuItem = new ToolStripMenuItem();
+            linkOnlyToolStripMenuItem = new ToolStripMenuItem();
             mainStatusStrip = new StatusStrip();
             toolStripStatusLabelMain = new ToolStripStatusLabel();
             splitContainerL0 = new SplitContainer();
             tableLayoutMain = new TableLayoutPanel();
             butAddMolecule = new Button();
-            butAddAccord = new Button();
-            butAddPerfume = new Button();
             treeViewMolecule = new TreeView();
             treeViewAccord = new TreeView();
+            labelPerfumeCreatorAccord = new Label();
+            labelPerfumeCreatorPefume = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            treeViewPerfume = new TreeView();
+            buttonExportPerfume = new Button();
             tableLayoutSide = new TableLayoutPanel();
             groupBoxDilutionCalc = new GroupBox();
             tableLayoutDilutionCalc = new TableLayoutPanel();
@@ -69,6 +75,7 @@
             splitContainerL0.Panel2.SuspendLayout();
             splitContainerL0.SuspendLayout();
             tableLayoutMain.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             tableLayoutSide.SuspendLayout();
             groupBoxDilutionCalc.SuspendLayout();
             tableLayoutDilutionCalc.SuspendLayout();
@@ -121,7 +128,7 @@
             // 
             // generalSettingsToolStripMenuItem
             // 
-            generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem });
+            generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem, accordTransitionSettingToolStripMenuItem });
             generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
             generalSettingsToolStripMenuItem.Size = new Size(159, 22);
             generalSettingsToolStripMenuItem.Text = "General Settings";
@@ -130,7 +137,7 @@
             // 
             viewportMaterialUnitToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { dropsToolStripMenuItem, milligramToolStripMenuItem });
             viewportMaterialUnitToolStripMenuItem.Name = "viewportMaterialUnitToolStripMenuItem";
-            viewportMaterialUnitToolStripMenuItem.Size = new Size(191, 22);
+            viewportMaterialUnitToolStripMenuItem.Size = new Size(204, 22);
             viewportMaterialUnitToolStripMenuItem.Text = "Viewport material unit";
             // 
             // dropsToolStripMenuItem
@@ -148,6 +155,29 @@
             milligramToolStripMenuItem.Size = new Size(154, 22);
             milligramToolStripMenuItem.Text = "Milligram (mg)";
             milligramToolStripMenuItem.Click += milligramToolStripMenuItem_Click;
+            // 
+            // accordTransitionSettingToolStripMenuItem
+            // 
+            accordTransitionSettingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { fullCopyToolStripMenuItem, linkOnlyToolStripMenuItem });
+            accordTransitionSettingToolStripMenuItem.Name = "accordTransitionSettingToolStripMenuItem";
+            accordTransitionSettingToolStripMenuItem.Size = new Size(204, 22);
+            accordTransitionSettingToolStripMenuItem.Text = "Accord transition setting";
+            // 
+            // fullCopyToolStripMenuItem
+            // 
+            fullCopyToolStripMenuItem.Name = "fullCopyToolStripMenuItem";
+            fullCopyToolStripMenuItem.Size = new Size(122, 22);
+            fullCopyToolStripMenuItem.Text = "Full copy";
+            fullCopyToolStripMenuItem.Click += fullCopyToolStripMenuItem_Click;
+            // 
+            // linkOnlyToolStripMenuItem
+            // 
+            linkOnlyToolStripMenuItem.Checked = true;
+            linkOnlyToolStripMenuItem.CheckState = CheckState.Checked;
+            linkOnlyToolStripMenuItem.Name = "linkOnlyToolStripMenuItem";
+            linkOnlyToolStripMenuItem.Size = new Size(122, 22);
+            linkOnlyToolStripMenuItem.Text = "Link only";
+            linkOnlyToolStripMenuItem.Click += linkOnlyToolStripMenuItem_Click;
             // 
             // mainStatusStrip
             // 
@@ -189,10 +219,11 @@
             tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
             tableLayoutMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutMain.Controls.Add(butAddMolecule, 2, 0);
-            tableLayoutMain.Controls.Add(butAddAccord, 1, 0);
-            tableLayoutMain.Controls.Add(butAddPerfume, 0, 0);
             tableLayoutMain.Controls.Add(treeViewMolecule, 2, 1);
             tableLayoutMain.Controls.Add(treeViewAccord, 1, 1);
+            tableLayoutMain.Controls.Add(labelPerfumeCreatorAccord, 1, 0);
+            tableLayoutMain.Controls.Add(labelPerfumeCreatorPefume, 0, 0);
+            tableLayoutMain.Controls.Add(tableLayoutPanel1, 0, 1);
             tableLayoutMain.Dock = DockStyle.Fill;
             tableLayoutMain.Location = new Point(0, 0);
             tableLayoutMain.Name = "tableLayoutMain";
@@ -213,26 +244,6 @@
             butAddMolecule.UseVisualStyleBackColor = true;
             butAddMolecule.Click += butAddMolecule_Click;
             // 
-            // butAddAccord
-            // 
-            butAddAccord.Dock = DockStyle.Fill;
-            butAddAccord.Location = new Point(273, 3);
-            butAddAccord.Name = "butAddAccord";
-            butAddAccord.Size = new Size(264, 24);
-            butAddAccord.TabIndex = 1;
-            butAddAccord.Text = "New Accord";
-            butAddAccord.UseVisualStyleBackColor = true;
-            // 
-            // butAddPerfume
-            // 
-            butAddPerfume.Dock = DockStyle.Fill;
-            butAddPerfume.Location = new Point(3, 3);
-            butAddPerfume.Name = "butAddPerfume";
-            butAddPerfume.Size = new Size(264, 24);
-            butAddPerfume.TabIndex = 0;
-            butAddPerfume.Text = "New Perfume";
-            butAddPerfume.UseVisualStyleBackColor = true;
-            // 
             // treeViewMolecule
             // 
             treeViewMolecule.Dock = DockStyle.Fill;
@@ -250,9 +261,71 @@
             treeViewAccord.Name = "treeViewAccord";
             treeViewAccord.Size = new Size(264, 599);
             treeViewAccord.TabIndex = 4;
+            treeViewAccord.ItemDrag += treeViewAccord_ItemDrag;
             treeViewAccord.NodeMouseDoubleClick += treeViewAccord_NodeMouseDoubleClick;
             treeViewAccord.DragDrop += treeViewAccord_DragDrop;
             treeViewAccord.DragEnter += treeViewAccord_DragEnter;
+            // 
+            // labelPerfumeCreatorAccord
+            // 
+            labelPerfumeCreatorAccord.AutoSize = true;
+            labelPerfumeCreatorAccord.Dock = DockStyle.Fill;
+            labelPerfumeCreatorAccord.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelPerfumeCreatorAccord.Location = new Point(273, 0);
+            labelPerfumeCreatorAccord.Name = "labelPerfumeCreatorAccord";
+            labelPerfumeCreatorAccord.Size = new Size(264, 30);
+            labelPerfumeCreatorAccord.TabIndex = 6;
+            labelPerfumeCreatorAccord.Text = "Accords";
+            labelPerfumeCreatorAccord.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // labelPerfumeCreatorPefume
+            // 
+            labelPerfumeCreatorPefume.AutoSize = true;
+            labelPerfumeCreatorPefume.Dock = DockStyle.Fill;
+            labelPerfumeCreatorPefume.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labelPerfumeCreatorPefume.Location = new Point(3, 0);
+            labelPerfumeCreatorPefume.Name = "labelPerfumeCreatorPefume";
+            labelPerfumeCreatorPefume.Size = new Size(264, 30);
+            labelPerfumeCreatorPefume.TabIndex = 7;
+            labelPerfumeCreatorPefume.Text = "Perfumes";
+            labelPerfumeCreatorPefume.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(treeViewPerfume, 0, 1);
+            tableLayoutPanel1.Controls.Add(buttonExportPerfume, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 33);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(264, 599);
+            tableLayoutPanel1.TabIndex = 8;
+            // 
+            // treeViewPerfume
+            // 
+            treeViewPerfume.AllowDrop = true;
+            treeViewPerfume.Dock = DockStyle.Fill;
+            treeViewPerfume.Location = new Point(3, 33);
+            treeViewPerfume.Name = "treeViewPerfume";
+            treeViewPerfume.Size = new Size(258, 563);
+            treeViewPerfume.TabIndex = 6;
+            treeViewPerfume.DragDrop += treeViewPerfume_DragDrop;
+            treeViewPerfume.DragEnter += treeViewPerfume_DragEnter;
+            // 
+            // buttonExportPerfume
+            // 
+            buttonExportPerfume.Dock = DockStyle.Fill;
+            buttonExportPerfume.Location = new Point(3, 3);
+            buttonExportPerfume.Name = "buttonExportPerfume";
+            buttonExportPerfume.Size = new Size(258, 24);
+            buttonExportPerfume.TabIndex = 7;
+            buttonExportPerfume.Text = "Export Perfume";
+            buttonExportPerfume.UseVisualStyleBackColor = true;
+            buttonExportPerfume.Click += buttonExportPerfume_Click;
             // 
             // tableLayoutSide
             // 
@@ -426,6 +499,7 @@
             // comboBoxDilutionCalcMode
             // 
             comboBoxDilutionCalcMode.Dock = DockStyle.Top;
+            comboBoxDilutionCalcMode.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBoxDilutionCalcMode.FormattingEnabled = true;
             comboBoxDilutionCalcMode.Location = new Point(3, 21);
             comboBoxDilutionCalcMode.Name = "comboBoxDilutionCalcMode";
@@ -463,6 +537,8 @@
             ((System.ComponentModel.ISupportInitialize)splitContainerL0).EndInit();
             splitContainerL0.ResumeLayout(false);
             tableLayoutMain.ResumeLayout(false);
+            tableLayoutMain.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
             tableLayoutSide.ResumeLayout(false);
             groupBoxDilutionCalc.ResumeLayout(false);
             tableLayoutDilutionCalc.ResumeLayout(false);
@@ -489,8 +565,6 @@
         private SplitContainer splitContainer1;
         private TableLayoutPanel tableLayoutMain;
         private Button butAddMolecule;
-        private Button butAddAccord;
-        private Button butAddPerfume;
         private TableLayoutPanel tableLayoutSide;
         private GroupBox groupBoxDilutionCalc;
         private ComboBox comboBoxDilutionCalcMode;
@@ -514,5 +588,13 @@
         private ToolStripMenuItem viewportMaterialUnitToolStripMenuItem;
         private ToolStripMenuItem dropsToolStripMenuItem;
         private ToolStripMenuItem milligramToolStripMenuItem;
+        private ToolStripMenuItem accordTransitionSettingToolStripMenuItem;
+        private ToolStripMenuItem fullCopyToolStripMenuItem;
+        private ToolStripMenuItem linkOnlyToolStripMenuItem;
+        private Label labelPerfumeCreatorAccord;
+        private Label labelPerfumeCreatorPefume;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TreeView treeViewPerfume;
+        private Button buttonExportPerfume;
     }
 }
