@@ -6,22 +6,59 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Mixture : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible
+    public class Mixture : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionType
     {
         // interface definition
-        public float Concentration => _concentration;
-        public DilutionType DilutionType => _dilutionType;
-        public MaterialUnit FullAmount => _fullAmount;
-        public float TotalPrice => _totalPrice;
+        public float Concentration
+        {
+            get => _concentration;
+            set => _concentration = value;
+        }
+        public DilutionType DilutionType
+        {
+            get => _dilutionType;
+            set => _dilutionType = value;
+        }
+        public MaterialUnit FullAmount
+        {
+            get => _fullAmount;
+            set => _fullAmount = value;
+        }
+        public MaterialUnit UsedAmount
+        {
+            get => _usedAmount;
+            set => _usedAmount = value;
+        }
+        public float TotalPrice
+        {
+            get => _totalPrice;
+            set => _totalPrice = value;
+        }
+        public float PricePerMG
+        {
+            get => _pricePerMilligram;
+            set => _pricePerMilligram = value;
+        }
+
+        public void AddComponent(IOnlyAccordCompatible newComponent)
+        {
+            _ingredientsList.Add(newComponent);
+        }
+
+        public void RemoveComponent(int index)
+        {
+            _ingredientsList.RemoveAt(index);
+        }
         //---
 
+        private List<IOnlyAccordCompatible> _ingredientsList = new List<IOnlyAccordCompatible>();
         public NoteLevel _noteLevel { get; set; }
         public ScentCategory _scentCategory { get; set; }
 
         /// <summary>
         /// Constructor to create an Accord-like data container based on the given data.
-        /// It could be used for storing/transferring information between different
-        /// objects without using an Accord object.
+        /// It acts like an universal object, for storing/transferring information
+        /// between different objects without using an Accord object.
         /// Reason for that is the missing information what type of data is added to
         /// the Mixture. In contrast: an Accord itself is basically just a container for
         /// a collection of other components like Molecules, Diluents and other Accords
@@ -30,7 +67,8 @@ namespace PerfumeCreator
         /// components it is later used for (it could be an Molecule, Accord, etc.).
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="materialAmount"></param>
+        /// <param name="fullAmount"></param>
+        /// <param name="usedAmount"></param>
         /// <param name="concentration"></param>
         /// <param name="fullPrice"></param>
         /// <param name="dilutionType"></param>
@@ -40,7 +78,8 @@ namespace PerfumeCreator
         /// <param name="comment"></param>
         public Mixture(
             string name,
-            MaterialUnit materialAmount,
+            MaterialUnit fullAmount,
+            MaterialUnit usedAmount,
             float concentration,
             float fullPrice,
             DilutionType dilutionType,
@@ -50,13 +89,14 @@ namespace PerfumeCreator
             string? comment = null)
             : base(
                   name,
-                  materialAmount,
+                  fullAmount,
                   concentration,
                   fullPrice,
                   dilutionType,
                   description,
                   comment)
         {
+            _usedAmount = usedAmount;
             _noteLevel = noteLevel;
             _scentCategory = scentCategory;
         }

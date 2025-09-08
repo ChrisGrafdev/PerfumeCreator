@@ -6,19 +6,57 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionReturn
+    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionType
     {
         // interface definition
-        public float Concentration => _concentration;
-        public DilutionType DilutionType => _dilutionType;
-        public MaterialUnit FullAmount => _fullAmount;
-        public float TotalPrice => _totalPrice;
+        public float Concentration
+        {
+            get => _concentration;
+            set => _concentration = value;
+        }
+        public DilutionType DilutionType
+        {
+            get => _dilutionType;
+            set => _dilutionType = value;
+        }
+        public MaterialUnit FullAmount
+        {
+            get => _fullAmount;
+            set => _fullAmount = value;
+        }
+        public MaterialUnit UsedAmount
+        {
+            get => _usedAmount;
+            set => _usedAmount = value;
+        }
+        public float TotalPrice
+        {
+            get => _totalPrice;
+            set => _totalPrice = value;
+        }
+        public float PricePerMG
+        {
+            get => _pricePerMilligram;
+            set => _pricePerMilligram = value;
+        }
+
+        public void AddComponent(IOnlyAccordCompatible newComponent)
+        {
+            _ingredientsList.Add(newComponent);
+        }
+
+        public void RemoveComponent(int index)
+        {
+            _ingredientsList.RemoveAt(index);
+        }
         // ---
 
         public NoteLevel _noteLevel { get; set; }
         public ScentCategory _scentCategory { get; set; }
-        private List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IOnlyAccordCompatible, MaterialUnit)>();
-        
+
+        //private List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IOnlyAccordCompatible, MaterialUnit)>();
+        private List<IOnlyAccordCompatible> _ingredientsList = new List<IOnlyAccordCompatible>();
+
         /// <summary>
         /// Constructor to create an Accord based on an existing IOnlyAccordCompatible object (Molecule/Accord/Diluent)
         /// </summary>
@@ -58,7 +96,8 @@ namespace PerfumeCreator
         /// <param name="newComponentAmount"></param>
         public void AddComponentToAccord(IOnlyAccordCompatible newComponent, MaterialUnit newComponentAmount)
         {
-            _ingredientsList.Add((newComponent, newComponentAmount));
+            ((Accord)newComponent)._usedAmount = newComponentAmount;
+            _ingredientsList.Add(newComponent);
             if (_ingredientsList.Count == 1) // first element
             {
                 // Accord member variables could be ignored due to handling them automatically when calling the constructor
@@ -66,7 +105,7 @@ namespace PerfumeCreator
                 return;
             }
             // convert current Accord properties to transferring structure
-            Mixture currentMix = new Mixture(_name, _fullAmount, _concentration, _totalPrice, _dilutionType);
+            Mixture currentMix = new Mixture(_name, _fullAmount, _usedAmount, _concentration, _totalPrice, _dilutionType);
             (Mixture resMix, MaterialUnit resAmount) = Mixing.MixGeneralFragrance(currentMix, _fullAmount, (Basis)newComponent, newComponentAmount);
             // update resulting values
             _fullAmount = resAmount;
@@ -77,10 +116,11 @@ namespace PerfumeCreator
 
         public void RemoveComponentFromAccord(int index) //?
         {
-            //tbd...
+            _ingredientsList.RemoveAt(index);
+            Mixing.RecalculateFullMix(_ingredientsList);
         }
 
-        public List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> GetIngredientsList()
+        public List<IOnlyAccordCompatible> GetIngredientsList()
         {
             return _ingredientsList;
         }

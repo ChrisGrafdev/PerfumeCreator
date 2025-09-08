@@ -6,16 +6,52 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Perfume : Basis, ICollectionReturn
+    public class Perfume : Basis, ICollectionType
     {
-        /*
-        public float FragranceConcentration => _concentration;
-        public DilutionType DilutionType => _dilutionType;
-        public MaterialUnit FullAmount => _fullAmount;
-        public float TotalPrice => _totalPrice;
-        */
-        
-        private List<(IAccordPerfumeCompatible Accord, MaterialUnit Amount)> _ingredientsList = new List<(IAccordPerfumeCompatible, MaterialUnit)>();
+        // Interface definition
+        public float Concentration
+        {
+            get => _concentration;
+            set => _concentration = value;
+        }
+        public DilutionType DilutionType
+        {
+            get => _dilutionType;
+            set => _dilutionType = value;
+        }
+        public MaterialUnit FullAmount
+        {
+            get => _fullAmount;
+            set => _fullAmount = value;
+        }
+        public MaterialUnit UsedAmount
+        {
+            get => _usedAmount;
+            set => _usedAmount = value;
+        }
+        public float TotalPrice
+        {
+            get => _totalPrice;
+            set => _totalPrice = value;
+        }
+        public float PricePerMG
+        {
+            get => _pricePerMilligram;
+            set => _pricePerMilligram = value;
+        }
+
+        public void AddComponent(IOnlyAccordCompatible newComponent)
+        {
+            _ingredientsList.Add((IAccordPerfumeCompatible)newComponent);
+        }
+
+        public void RemoveComponent(int index)
+        {
+            _ingredientsList.RemoveAt(index);
+        }
+
+
+        private List<IAccordPerfumeCompatible> _ingredientsList = new List<IAccordPerfumeCompatible>();
 
         public Perfume(
             string name,

@@ -12,7 +12,7 @@ namespace PerfumeCreator
 {
     public partial class FormCreateCollection : Form
     {
-        public event Action<ICollectionReturn> CreateCollectionAction;
+        public event Action<ICollectionType> CreateCollectionAction;
         private FormComponentUseCase _formComponentUseCase;
         private Basis _base;
         private MaterialUnit _materialUnit;

@@ -9,8 +9,10 @@ namespace PerfumeCreator
     public interface IOnlyAccordCompatible
     {
         MaterialUnit FullAmount { get; }
+        MaterialUnit UsedAmount { get; }
         float Concentration { get; }
         float TotalPrice { get; }
+        float PricePerMG { get; }
         DilutionType DilutionType { get; }
     }
 }

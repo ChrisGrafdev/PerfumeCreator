@@ -12,7 +12,9 @@ namespace PerfumeCreator
         public float Concentration => _concentration;
         public DilutionType DilutionType => _dilutionType;
         public MaterialUnit FullAmount => _fullAmount;
+        public MaterialUnit UsedAmount => _usedAmount;
         public float TotalPrice => _totalPrice;
+        public float PricePerMG => _pricePerMilligram;
         //---
 
         public ScentCategory _scentCategory { get; set; }
