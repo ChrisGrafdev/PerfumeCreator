@@ -149,7 +149,9 @@ namespace PerfumeCreator
                         toolStripStatusLabelMain.Text = "Amount is required, abort adding new Element";
                         return;
                     }
-                    var (accordCompatible, _) = ((IOnlyAccordCompatible, MaterialUnit))targetNode.Tag;
+                    //var (accordCompatible, _) = ((IOnlyAccordCompatible, MaterialUnit))targetNode.Tag;
+                    if (targetNode.Tag is (Basis accordCompatible, MaterialUnit))
+                    //(Basis accordCompatible, MaterialUnit oldAmount) = ((IOnlyAccordCompatible, MaterialUnit))targetNode.Tag;
                     targetNode.Tag = (accordCompatible, (MaterialUnit)newAmount);
                     targetNode.Text = frag._name + " : " + ((MaterialUnit)newAmount).GetUnitAmount(Globals.ViewportMaterialUnit).ToString() + " " + Globals.ViewportMaterialUnit.ToString();
                 };

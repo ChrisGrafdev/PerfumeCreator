@@ -132,7 +132,7 @@
             // 
             generalSettingsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewportMaterialUnitToolStripMenuItem, accordTransitionSettingToolStripMenuItem });
             generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            generalSettingsToolStripMenuItem.Size = new Size(180, 22);
+            generalSettingsToolStripMenuItem.Size = new Size(159, 22);
             generalSettingsToolStripMenuItem.Text = "General Settings";
             // 
             // viewportMaterialUnitToolStripMenuItem
