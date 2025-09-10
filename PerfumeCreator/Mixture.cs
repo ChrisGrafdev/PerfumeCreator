@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Mixture : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionType
+    public class Mixture : Basis, IAccordCompatible, IAccordPerfumeCompatible, ICollectionType
     {
         // interface definition
+        public string Name => _name;
         public float Concentration
         {
             get => _concentration;
@@ -40,7 +41,7 @@ namespace PerfumeCreator
             set => _pricePerMilligram = value;
         }
 
-        public void AddComponent(IOnlyAccordCompatible newComponent)
+        public void AddComponent(IAccordCompatible newComponent)
         {
             _ingredientsList.Add(newComponent);
         }
@@ -49,9 +50,19 @@ namespace PerfumeCreator
         {
             _ingredientsList.RemoveAt(index);
         }
+
+        public IAccordCompatible? CheckIngredientExistence(IAccordCompatible compareComponent)
+        {
+            return _ingredientsList.FirstOrDefault(x => x.Name == compareComponent.Name);
+        }
+
+        public List<IAccordCompatible> GetIngredientsList()
+        {
+            return _ingredientsList;
+        }
         //---
 
-        private List<IOnlyAccordCompatible> _ingredientsList = new List<IOnlyAccordCompatible>();
+        private List<IAccordCompatible> _ingredientsList = new List<IAccordCompatible>();
         public NoteLevel _noteLevel { get; set; }
         public ScentCategory _scentCategory { get; set; }
 

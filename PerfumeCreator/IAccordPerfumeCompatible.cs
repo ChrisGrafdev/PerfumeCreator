@@ -8,6 +8,7 @@ namespace PerfumeCreator
 {
     public interface IAccordPerfumeCompatible
     {
+        string Name { get; }
         float Concentration { get; }
         DilutionType DilutionType { get; }
         MaterialUnit FullAmount { get; }

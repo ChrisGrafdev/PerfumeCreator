@@ -27,7 +27,7 @@ namespace PerfumeCreator
             if (compatible is not IAccordPerfumeCompatible && _formComponentUseCase != FormComponentUseCase.Accord)
                 return false; // wrong usecase
 
-            if (compatible is IOnlyAccordCompatible || compatible is IAccordPerfumeCompatible)
+            if (compatible is IAccordCompatible || compatible is IAccordPerfumeCompatible)
             {
                 // Get target location
                 Point targetPoint = _refTreeView.PointToClient(new Point(e.X, e.Y));
@@ -78,7 +78,7 @@ namespace PerfumeCreator
                         {
                             targetNode = targetNode.Parent;
                         }
-                        if (targetNode?.Tag is Accord existingAccord && compatible is IOnlyAccordCompatible accordComp)
+                        if (targetNode?.Tag is Accord existingAccord && compatible is IAccordCompatible accordComp)
                         {
                             // add component to accord mixture
                             existingAccord.AddComponentToAccord(accordComp, materialAmount);
@@ -127,9 +127,9 @@ namespace PerfumeCreator
 
             if (collection is Accord)
             {
-                List<(IOnlyAccordCompatible, MaterialUnit)> ingredients = ((Accord)collection).GetIngredientsList();
+                List<(IAccordCompatible, MaterialUnit)> ingredients = ((Accord)collection).GetIngredientsList();
 
-                foreach ((IOnlyAccordCompatible Frag, MaterialUnit Amount) in ingredients)
+                foreach ((IAccordCompatible Frag, MaterialUnit Amount) in ingredients)
                 {
                     ingredientTreeNodes.Add(CollectionAsTreeNode((Basis)Frag, Amount)); // recursive call
                 }

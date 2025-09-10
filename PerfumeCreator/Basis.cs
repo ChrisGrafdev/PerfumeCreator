@@ -114,7 +114,7 @@ namespace PerfumeCreator
             /// <exception cref="ArgumentNullException"></exception>
             public static void MixGeneralFragrance(
                 ref ICollectionType baseMixture, // Accord or Perfume
-                IOnlyAccordCompatible newComponent) // Molecule or Accord
+                IAccordCompatible newComponent) // Molecule or Accord
             {
                 if (newComponent == null)
                     throw new ArgumentNullException("Some value for Mixture calculation is null!");
@@ -123,9 +123,17 @@ namespace PerfumeCreator
 
                 // Check if newComponent already exists inside the baseMixture
                 // -> if yes, don't add new component, only update amount.
-                //
-                // tbd...
-                //
+                IAccordCompatible? existingIngredient = baseMixture.CheckIngredientExistence(newComponent);
+                if (existingIngredient != null) // -> component already exist => don't add new component, only update amount
+                {
+                    bool success = Mixing.UpdateIngredientAmount(ref baseMixture, newComponent.Name, newComponent.UsedAmount);
+                    if (!success)
+                    {
+                        MessageBox.Show("Mixing Error - Existing ingredient were found, but the amount couldn't be updated.", "Mixing error", MessageBoxButtons.OK);
+                    }
+                    return; // changes applied and values calculated -> end
+                }
+
 
                 // calculate Amount and Concentration
                 // Get the raw fragrance amount of the existing Mixture based on the Accord/Perfume concentration and the combined amount of all ingredients -> _fullamount
@@ -165,16 +173,72 @@ namespace PerfumeCreator
                     dilutionTypeResult = DilutionType.Mix;
             }
 
-            public static Mixture? RecalculateFullMix(List<IOnlyAccordCompatible> ingredientsList)
+            public static bool UpdateIngredientAmount(ref ICollectionType collection, string changedComponentName, MaterialUnit changedAmount)
+            {
+                List<IAccordCompatible> ingredientsList = collection.GetIngredientsList();
+                IAccordCompatible? existingComponent = ingredientsList.FirstOrDefault(x => x.Name == changedComponentName);
+                if (existingComponent == null)
+                    return false;
+                existingComponent.UsedAmount.UpdateMaterialAmount(changedAmount);
+
+                Mixture? resMixture = Mixing.RecalculateFullMix(collection.GetIngredientsList());
+                if (resMixture == null)
+                    return false;
+
+                // apply resMixture changes back into collection
+                collection.FullAmount = resMixture._fullAmount;
+                collection.Concentration = resMixture._concentration;
+                collection.PricePerMG = resMixture._pricePerMilligram;
+                collection.TotalPrice = resMixture._totalPrice;
+                collection.DilutionType = resMixture._dilutionType;
+                return true;
+            }
+
+            public static Mixture? RecalculateFullMix(List<IAccordCompatible> ingredientsList)
             {
                 if (ingredientsList?.Count == 0 || ingredientsList == null)
                     return null;
 
-                IOnlyAccordCompatible firstFrag = ingredientsList[0];
-                foreach(IOnlyAccordCompatible frag in ingredientsList)
+                Mixture baseMixture = new Mixture( // this mixture imitates the Accord/Perfume for recalculation
+                    "collection",
+                    ingredientsList[0].UsedAmount, // set fullAmount to the used amount of the first ingredient
+                    new MaterialUnit(UnitType.Milligram, 0), // set used amount to zero (could be later defined if this is an Accord which is used in a Perfume
+                    ingredientsList[0].Concentration,
+                    ingredientsList[0].PricePerMG * ingredientsList[0].UsedAmount.GetMilligramAmount(), // reverse calculation of the current price (so far)
+                    ingredientsList[0].DilutionType);
+                
+                foreach(IAccordCompatible frag in ingredientsList.Skip(1))
                 {
-                    Mixing.MixGeneralFragrance()
+                    // calculate Amount and Concentration
+                    // Get the raw fragrance amount of the existing Mixture based on the Accord/Perfume concentration and the combined amount of all ingredients -> _fullamount
+                    float existingRawFragranceAmount = baseMixture.Concentration * baseMixture.FullAmount.GetMilligramAmount();
+
+                    // Calculate the fragrance amount of the new Mixture based on its concentration and the used amount (of this component)
+                    float newRawFragranceAmount = frag.Concentration * frag.UsedAmount.GetMilligramAmount(); // in case of Diluent concentration = 0
+
+                    //float combinedAmount = existingAmount.GetMilligramAmount() + newAmount.GetMilligramAmount();
+                    float combinedAmount = baseMixture.FullAmount.GetMilligramAmount() + frag.UsedAmount.GetMilligramAmount();
+                    if (combinedAmount == 0)
+                        return null;
+                        //throw new ArgumentException("Added Mixture amount is zero!");// tbd: better way of handling
+
+                    // calculate concentration
+                    float averageConcentration = (existingRawFragranceAmount + newRawFragranceAmount) / combinedAmount;
+
+                    // calculate total Price
+                    float totalPriceExistingMix = baseMixture.PricePerMG * baseMixture.FullAmount.GetMilligramAmount();
+                    float totalPricefrag = frag.PricePerMG * frag.UsedAmount.GetMilligramAmount();
+                    float combinedPrice = totalPriceExistingMix + totalPricefrag;
+
+                    // update values into baseMixture
+                    baseMixture._fullAmount.UpdateMaterialAmount(UnitType.Milligram, combinedAmount);
+                    baseMixture._concentration = averageConcentration;
+                    baseMixture._totalPrice = combinedPrice;
+                    baseMixture._pricePerMilligram = combinedPrice / combinedAmount;
+                    if (baseMixture.DilutionType != frag.DilutionType)
+                        baseMixture.DilutionType = DilutionType.Mix;
                 }
+                return baseMixture;
             }
         }
     }

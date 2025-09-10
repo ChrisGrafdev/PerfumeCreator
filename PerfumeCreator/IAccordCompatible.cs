@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public interface IOnlyAccordCompatible
+    public interface IAccordCompatible
     {
+        string Name { get; }
         MaterialUnit FullAmount { get; }
         MaterialUnit UsedAmount { get; }
         float Concentration { get; }

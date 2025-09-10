@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace PerfumeCreator
 {
-    public class Accord : Basis, IOnlyAccordCompatible, IAccordPerfumeCompatible, ICollectionType
+    public class Accord : Basis, IAccordCompatible, IAccordPerfumeCompatible, ICollectionType
     {
         // interface definition
+        public string Name => _name;
         public float Concentration
         {
             get => _concentration;
@@ -40,7 +41,7 @@ namespace PerfumeCreator
             set => _pricePerMilligram = value;
         }
 
-        public void AddComponent(IOnlyAccordCompatible newComponent)
+        public void AddComponent(IAccordCompatible newComponent)
         {
             _ingredientsList.Add(newComponent);
         }
@@ -55,7 +56,7 @@ namespace PerfumeCreator
         public ScentCategory _scentCategory { get; set; }
 
         //private List<(IOnlyAccordCompatible Frag, MaterialUnit Amount)> _ingredientsList = new List<(IOnlyAccordCompatible, MaterialUnit)>();
-        private List<IOnlyAccordCompatible> _ingredientsList = new List<IOnlyAccordCompatible>();
+        private List<IAccordCompatible> _ingredientsList = new List<IAccordCompatible>();
 
         /// <summary>
         /// Constructor to create an Accord based on an existing IOnlyAccordCompatible object (Molecule/Accord/Diluent)
@@ -68,7 +69,7 @@ namespace PerfumeCreator
         /// <exception cref="ArgumentException"></exception>
         public Accord(
             string name,
-            IOnlyAccordCompatible baseComponent,
+            IAccordCompatible baseComponent,
             MaterialUnit baseMaterialAmount,
             ScentCategory scentCategory = ScentCategory.UNKNOWN,
             NoteLevel noteLevel = NoteLevel.UNKNOWN,
@@ -94,7 +95,7 @@ namespace PerfumeCreator
         /// </summary>
         /// <param name="newComponent"></param>
         /// <param name="newComponentAmount"></param>
-        public void AddComponentToAccord(IOnlyAccordCompatible newComponent, MaterialUnit newComponentAmount)
+        public void AddComponentToAccord(IAccordCompatible newComponent, MaterialUnit newComponentAmount)
         {
             ((Accord)newComponent)._usedAmount = newComponentAmount;
             _ingredientsList.Add(newComponent);
@@ -120,7 +121,7 @@ namespace PerfumeCreator
             Mixing.RecalculateFullMix(_ingredientsList);
         }
 
-        public List<IOnlyAccordCompatible> GetIngredientsList()
+        public List<IAccordCompatible> GetIngredientsList()
         {
             return _ingredientsList;
         }

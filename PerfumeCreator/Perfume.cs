@@ -9,6 +9,7 @@ namespace PerfumeCreator
     public class Perfume : Basis, ICollectionType
     {
         // Interface definition
+        public string Name => _name;
         public float Concentration
         {
             get => _concentration;
@@ -40,9 +41,9 @@ namespace PerfumeCreator
             set => _pricePerMilligram = value;
         }
 
-        public void AddComponent(IOnlyAccordCompatible newComponent)
+        public void AddComponent(IAccordCompatible newComponent)
         {
-            _ingredientsList.Add((IAccordPerfumeCompatible)newComponent);
+            _ingredientsList.Add(newComponent);
         }
 
         public void RemoveComponent(int index)
@@ -50,12 +51,22 @@ namespace PerfumeCreator
             _ingredientsList.RemoveAt(index);
         }
 
+        public List<IAccordCompatible> GetIngredientsList()
+        {
+            return _ingredientsList;
+        }
 
-        private List<IAccordPerfumeCompatible> _ingredientsList = new List<IAccordPerfumeCompatible>();
+        public IAccordCompatible? CheckIngredientExistence(IAccordCompatible compareComponent)
+        {
+            return _ingredientsList.FirstOrDefault(x => x.Name == compareComponent.Name);
+        }
+
+
+        private List<IAccordCompatible> _ingredientsList = new List<IAccordCompatible>();
 
         public Perfume(
             string name,
-            IAccordPerfumeCompatible baseComponent,
+            IAccordCompatible baseComponent,
             MaterialUnit baseMaterialAmount,
             string? description = null,
             string? comment = null)
@@ -76,7 +87,7 @@ namespace PerfumeCreator
         /// </summary>
         /// <param name="newComponent"></param>
         /// <param name="newComponentAmount"></param>
-        public void AddComponentToPerfume(IAccordPerfumeCompatible newComponent, MaterialUnit newComponentAmount)
+        public void AddComponentToPerfume(IAccordCompatible newComponent, MaterialUnit newComponentAmount)
         {
             _ingredientsList.Add((newComponent, newComponentAmount));
             if (_ingredientsList.Count == 1) // first element

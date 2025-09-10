@@ -10,7 +10,7 @@ namespace PerfumeCreator
     {
         public MaterialUnit(UnitType unitType, float unitAmount)
         {
-            updateMaterialAmount(unitType, unitAmount);
+            UpdateMaterialAmount(unitType, unitAmount);
         }
 
         public float GetUnitAmount(UnitType unitType)
@@ -29,7 +29,7 @@ namespace PerfumeCreator
         public float GetMilligramAmount()
         { return _amountMilligram; }
 
-        public void updateMaterialAmount(UnitType unitType, float unitAmount)
+        public void UpdateMaterialAmount(UnitType unitType, float unitAmount)
         {
             if (unitType == UnitType.Drops)
             {
@@ -42,6 +42,13 @@ namespace PerfumeCreator
                 _amountMilligram = unitAmount;
             }
         }
+
+        public void UpdateMaterialAmount(MaterialUnit amount)
+        {
+            _amountDrops = amount._amountDrops;
+            _amountMilligram = amount._amountMilligram;
+        }
+
         public float DropsToMilligram(float drops)
         {
             return Globals.DropWeight * drops;

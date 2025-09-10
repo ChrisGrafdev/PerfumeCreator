@@ -26,8 +26,8 @@ namespace PerfumeCreator
                 outputStringLines += $"\t{((Accord)mainAccord)._name} : {mainAmount.AllToString()}\n";
                 outputStringLines += "\t\tAccord ingredients:\n";
 
-                List<(IOnlyAccordCompatible, MaterialUnit)> accordIngredients = ((Accord)mainAccord).GetIngredientsList();
-                foreach ((IOnlyAccordCompatible molecule, MaterialUnit moleculeAmount) in accordIngredients) // handle recurrent accords?
+                List<(IAccordCompatible, MaterialUnit)> accordIngredients = ((Accord)mainAccord).GetIngredientsList();
+                foreach ((IAccordCompatible molecule, MaterialUnit moleculeAmount) in accordIngredients) // handle recurrent accords?
                 {
                     if (molecule == null) continue;
                     outputStringLines += $"\t\t\t{((Molecule)molecule)._name} : {moleculeAmount.AllToString()}\n";
@@ -73,8 +73,8 @@ namespace PerfumeCreator
             
             foreach ((IAccordPerfumeCompatible mainAccord, MaterialUnit mainAmount) in mainIngredients)
             {
-                List<(IOnlyAccordCompatible, MaterialUnit)> accordIngredients = ((Accord)mainAccord).GetIngredientsList();
-                foreach ((IOnlyAccordCompatible molecule, MaterialUnit moleculeAmount) in accordIngredients) // handle recurrent accords?
+                List<(IAccordCompatible, MaterialUnit)> accordIngredients = ((Accord)mainAccord).GetIngredientsList();
+                foreach ((IAccordCompatible molecule, MaterialUnit moleculeAmount) in accordIngredients) // handle recurrent accords?
                 {
                     //tdb...
                 }
